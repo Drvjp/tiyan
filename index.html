@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运费计算器</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .calculator {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .result {
+            background-color: #e9f7ef;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #27ae60;
+            display: none;
+        }
+        
+        .price-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .price-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .price-table th, .price-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .price-table th {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .price-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .checkbox-group, .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .checkbox-group label, .radio-group label {
+            display: flex;
+            align-items: center;
+        }
+        
+        #manualWeightInput {
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>运费计算器</h1>
+        
+        <div class="form-group">
+            <label for="region">选择地区：</label>
+            <select id="region">
+                <option value="">请选择地区</option>
+                <option value="tongcheng">同城</option>
+                <option value="jiangzhehu">江浙沪</option>
+                <option value="beijing">北京、天津、山东、广东、河北、河南、湖北、湖南、甘肃、福建</option>
+                <option value="ningxia">宁夏</option>
+                <option value="jiangxi">江西</option>
+                <option value="yunnan">云南、广西、贵州</option>
+                <option value="sichuan">四川、山西、海南、辽宁、重庆、陕西</option>
+                <option value="neimeng">内蒙</option>
+                <option value="jilin">吉林、黑龙江</option>
+                <option value="xinjiang">新疆</option>
+                <option value="qinghai">青海</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>产品重量：</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="weightOption" value="ps5" checked>
+                    选项1: PS5 约7kg
+                </label>
+                <label>
+                    <input type="radio" name="weightOption" value="vr">
+                    选项2: VR 约2kg
+                </label>
+                <label>
+                    <input type="radio" name="weightOption" value="manual">
+                    选项3: 手动输入重量
+                </label>
+            </div>
+            <div id="manualWeightInput" class="form-group">
+                <input type="number" id="manualWeight" placeholder="请输入产品重量 (kg)" min="0.1" step="0.1">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="discount">折扣率：</label>
+            <input type="number" id="discount" placeholder="请输入折扣率（如0.65表示6.5折）" min="0.1" max="1" step="0.01" value="0.65">
+        </div>
+        
+        <div class="form-group">
+            <label>增值服务：</label>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" id="gas_column" value="1">
+                    气柱 (+1元)
+                </label>
+                <label>
+                    <input type="checkbox" id="photo_return" value="2">
+                    拍照回传 (+2元)
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>保价选项：</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="insurance" value="500_1" checked>
+                    选项1: 500元 (1元)
+                </label>
+                <label>
+                    <input type="radio" name="insurance" value="800_3">
+                    选项2: 800元 (3元)
+                </label>
+                <label>
+                    <input type="radio" name="insurance" value="1000_5">
+                    选项3: 1000元 (5元)
+                </label>
+            </div>
+        </div>
+        
+        <button onclick="calculateShipping()">计算运费</button>
+        
+        <div id="result" class="result">
+            <p>基础运费：¥<span id="base_cost">0.0</span></p>
+            <p>折扣后基础运费：¥<span id="discounted_base_cost">0.0</span></p>
+            <p style="color: #e74c3c;">预计优惠：¥<span id="savings">0.0</span></p>
+            <p>增值服务费用：¥<span id="additional_cost">0.0</span></p>
+            <p>总运费：¥<span id="total_cost">0.0</span></p>
+        </div>
+        
+        <div class="price-info">
+            <h3>各地区运费标准</h3>
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>地区</th>
+                        <th>首重单价 (元/kg)</th>
+                        <th>续重单价 (元/kg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>同城</td>
+                        <td>10</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>江浙沪</td>
+                        <td>11</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>北京、天津、山东、广东、河北、河南、湖北、湖南、甘肃、福建</td>
+                        <td>13</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>宁夏</td>
+                        <td>13</td>
+                        <td>5.5</td>
+                    </tr>
+                    <tr>
+                        <td>江西</td>
+                        <td>13</td>
+                        <td>4.5</td>
+                    </tr>
+                    <tr>
+                        <td>云南、广西、贵州</td>
+                        <td>15</td>
+                        <td>5.5</td>
+                    </tr>
+                    <tr>
+                        <td>四川、山西、海南、辽宁、重庆、陕西</td>
+                        <td>15</td>
+                        <td>5</td>
+                    </tr>
+                    <tr>
+                        <td>内蒙</td>
+                        <td>13</td>
+                        <td>5.5</td>
+                    </tr>
+                    <tr>
+                        <td>吉林、黑龙江</td>
+                        <td>15</td>
+                        <td>7</td>
+                    </tr>
+                    <tr>
+                        <td>新疆</td>
+                        <td>19</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td>青海</td>
+                        <td>14</td>
+                        <td>5.5</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 定义各地区的运费标准
+        const shippingRates = {
+            tongcheng: { firstWeightPrice: 10, additionalWeightPrice: 2 },
+            jiangzhehu: { firstWeightPrice: 11, additionalWeightPrice: 2 },
+            beijing: { firstWeightPrice: 13, additionalWeightPrice: 5 },
+            ningxia: { firstWeightPrice: 13, additionalWeightPrice: 5.5 },
+            jiangxi: { firstWeightPrice: 13, additionalWeightPrice: 4.5 },
+            yunnan: { firstWeightPrice: 15, additionalWeightPrice: 5.5 },
+            sichuan: { firstWeightPrice: 15, additionalWeightPrice: 5 },
+            neimeng: { firstWeightPrice: 13, additionalWeightPrice: 5.5 },
+            jilin: { firstWeightPrice: 15, additionalWeightPrice: 7 },
+            xinjiang: { firstWeightPrice: 19, additionalWeightPrice: 10 },
+            qinghai: { firstWeightPrice: 14, additionalWeightPrice: 5.5 }
+        };
+
+        // 显示/隐藏手动输入重量框
+        document.querySelectorAll('input[name="weightOption"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const manualWeightInput = document.getElementById('manualWeightInput');
+                if (this.value === 'manual') {
+                    manualWeightInput.style.display = 'block';
+                } else {
+                    manualWeightInput.style.display = 'none';
+                }
+            });
+        });
+
+        function calculateShipping() {
+            // 获取用户输入
+            const region = document.getElementById('region').value;
+            const weightOption = document.querySelector('input[name="weightOption"]:checked').value;
+            let weight;
+            if (weightOption === 'ps5') {
+                weight = 7; // PS5 约7kg
+            } else if (weightOption === 'vr') {
+                weight = 2; // VR 约2kg
+            } else {
+                weight = parseFloat(document.getElementById('manualWeight').value);
+                if (isNaN(weight) || weight <= 0) {
+                    alert('请输入有效的产品重量！');
+                    return;
+                }
+            }
+            const discount = parseFloat(document.getElementById('discount').value) || 0.65; // 折扣率，默认0.65
+            const gasColumn = document.getElementById('gas_column').checked ? 1 : 0; // 气柱费用
+            const photoReturn = document.getElementById('photo_return').checked ? 2 : 0; // 拍照回传费用
+            const insuranceRadio = document.querySelector('input[name="insurance"]:checked');
+            const [insuranceAmount, insuranceFee] = insuranceRadio ? insuranceRadio.value.split('_').map(Number) : [0, 0]; // 保价金额和费用
+
+            const resultDiv = document.getElementById('result');
+            const baseCostSpan = document.getElementById('base_cost');
+            const discountedBaseCostSpan = document.getElementById('discounted_base_cost');
+            const savingsSpan = document.getElementById('savings'); // 新增：预计优惠
+            const additionalCostSpan = document.getElementById('additional_cost');
+            const totalCostSpan = document.getElementById('total_cost');
+
+            // 验证输入
+            if (!region) {
+                alert('请选择地区！');
+                return;
+            }
+
+            if (isNaN(discount) || discount < 0.1 || discount > 1) {
+                alert('折扣率必须在0.1到1之间！');
+                return;
+            }
+
+            // 获取对应地区的运费标准
+            const rates = shippingRates[region];
+
+            // 计算基础运费
+            // 基础运费 = (1 * 首重单价) + ((产品重量 - 1) * 续重单价)
+            let baseCost = (1 * rates.firstWeightPrice) + ((weight - 1) * rates.additionalWeightPrice);
+
+            // 计算折扣后基础运费
+            let discountedBaseCost = baseCost * discount;
+
+            // 计算预计优惠
+            let savings = baseCost - discountedBaseCost;
+
+            // 计算增值服务费用
+            let additionalCost = gasColumn + photoReturn + insuranceFee;
+
+            // 计算总运费
+            let totalCost = discountedBaseCost + additionalCost;
+
+            // 四舍五入到1位小数
+            baseCost = Math.round(baseCost * 10) / 10;
+            discountedBaseCost = Math.round(discountedBaseCost * 10) / 10;
+            savings = Math.round(savings * 10) / 10; // 四舍五入预计优惠
+            additionalCost = Math.round(additionalCost * 10) / 10;
+            totalCost = Math.round(totalCost * 10) / 10;
+
+            // 显示结果
+            baseCostSpan.textContent = baseCost.toFixed(1);
+            discountedBaseCostSpan.textContent = discountedBaseCost.toFixed(1);
+            savingsSpan.textContent = savings.toFixed(1); // 显示预计优惠
+            additionalCostSpan.textContent = additionalCost.toFixed(1);
+            totalCostSpan.textContent = totalCost.toFixed(1);
+
+            resultDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
