@@ -1,0 +1,224 @@
+{
+  "rooms": [
+    {
+      "id": "room1",
+      "name": "包厢A",
+      "machines": [],
+      "note": "",
+      "activeSessions": {}
+    },
+    {
+      "id": "room2",
+      "name": "包厢B",
+      "machines": [],
+      "note": "",
+      "activeSessions": {}
+    }
+  ],
+  "machines": [
+    {
+      "id": "machine1",
+      "name": "PS5-01",
+      "image": "https://placehold.co/120x120/blue/white?text=PS5"
+    },
+    {
+      "id": "machine2",
+      "name": "PS5-02",
+      "image": "https://placehold.co/120x120/orange/white?text=PS5"
+    },
+    {
+      "id": "machine3",
+      "name": "Xbox-01",
+      "image": "https://placehold.co/120x120/green/white?text=Xbox"
+    },
+    {
+      "id": "machine4",
+      "name": "Switch-01",
+      "image": "https://placehold.co/120x120/red/white?text=Switch"
+    },
+    {
+      "id": "machine5",
+      "name": "PC-01",
+      "image": "https://placehold.co/120x120/purple/white?text=PC"
+    },
+    {
+      "id": "machine6",
+      "name": "Arcade-01",
+      "image": "https://placehold.co/120x120/yellow/white?text=Arcade"
+    }
+  ],
+  "games": [
+    {
+      "id": "game1",
+      "name": "战神4",
+      "image": "https://placehold.co/120x120/orange/white?text=战神4",
+      "tags": [
+        "动作",
+        "冒险"
+      ]
+    },
+    {
+      "id": "game2",
+      "name": "最后生还者2",
+      "image": "https://placehold.co/120x120/blue/white?text=最后生还者2",
+      "tags": [
+        "动作",
+        "剧情"
+      ]
+    },
+    {
+      "id": "game3",
+      "name": "地平线5",
+      "image": "https://placehold.co/120x120/green/white?text=地平线5",
+      "tags": [
+        "赛车",
+        "开放世界"
+      ]
+    },
+    {
+      "id": "game4",
+      "name": "使命召唤",
+      "image": "https://placehold.co/120x120/red/white?text=使命召唤",
+      "tags": [
+        "射击",
+        "多人"
+      ]
+    },
+    {
+      "id": "game5",
+      "name": "战地风云",
+      "image": "https://placehold.co/120x120/darkred/white?text=战地风云",
+      "tags": [
+        "射击",
+        "战争"
+      ]
+    },
+    {
+      "id": "game6",
+      "name": "FIFA23",
+      "image": "https://placehold.co/120x120/green/white?text=FIFA23",
+      "tags": [
+        "体育",
+        "足球"
+      ]
+    },
+    {
+      "id": "game7",
+      "name": "光环无限",
+      "image": "https://placehold.co/120x120/blue/white?text=光环无限",
+      "tags": [
+        "射击",
+        "科幻"
+      ]
+    },
+    {
+      "id": "game8",
+      "name": "极限竞速",
+      "image": "https://placehold.co/120x120/orange/white?text=极限竞速",
+      "tags": [
+        "赛车",
+        "模拟"
+      ]
+    },
+    {
+      "id": "game9",
+      "name": "塞尔达传说",
+      "image": "https://placehold.co/120x120/green/white?text=塞尔达",
+      "tags": [
+        "冒险",
+        "解谜"
+      ]
+    },
+    {
+      "id": "game10",
+      "name": "马里奥赛车",
+      "image": "https://placehold.co/120x120/red/white?text=马里奥赛车",
+      "tags": [
+        "竞速",
+        "多人"
+      ]
+    },
+    {
+      "id": "game11",
+      "name": "动物森友会",
+      "image": "https://placehold.co/120x120/yellow/white?text=动物森友会",
+      "tags": [
+        "模拟",
+        "休闲"
+      ]
+    },
+    {
+      "id": "game12",
+      "name": "斯普拉遁3",
+      "image": "https://placehold.co/120x120/purple/white?text=斯普拉遁3",
+      "tags": [
+        "射击",
+        "多人"
+      ]
+    },
+    {
+      "id": "game13",
+      "name": "英雄联盟",
+      "image": "https://placehold.co/120x120/blue/white?text=LOL",
+      "tags": [
+        "MOBA",
+        "竞技"
+      ]
+    },
+    {
+      "id": "game14",
+      "name": "绝地求生",
+      "image": "https://placehold.co/120x120/orange/white?text=PUBG",
+      "tags": [
+        "射击",
+        "大逃杀"
+      ]
+    },
+    {
+      "id": "game15",
+      "name": "CS2",
+      "image": "https://placehold.co/120x120/black/white?text=CS2",
+      "tags": [
+        "射击",
+        "战术"
+      ]
+    },
+    {
+      "id": "game16",
+      "name": "原神",
+      "image": "https://placehold.co/120x120/cyan/white?text=原神",
+      "tags": [
+        "RPG",
+        "开放世界"
+      ]
+    },
+    {
+      "id": "game17",
+      "name": "街头霸王6",
+      "image": "https://placehold.co/120x120/red/white?text=街头霸王",
+      "tags": [
+        "格斗",
+        "经典"
+      ]
+    },
+    {
+      "id": "game18",
+      "name": "拳皇15",
+      "image": "https://placehold.co/120x120/orange/white?text=拳皇15",
+      "tags": [
+        "格斗",
+        "对战"
+      ]
+    },
+    {
+      "id": "game19",
+      "name": "铁拳8",
+      "image": "https://placehold.co/120x120/blue/white?text=铁拳8",
+      "tags": [
+        "格斗",
+        "3D"
+      ]
+    }
+  ],
+  "machineGames": {}
+}
