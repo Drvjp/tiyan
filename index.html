@@ -3,399 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>运费计算器</title>
+    <title>电玩店包厢管理系统</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             padding: 20px;
-            background-color: #f5f5f5;
         }
-        
-        .calculator {
-            background-color: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
-        
-        h1 {
+
+        .header {
             text-align: center;
-            color: #333;
+            color: white;
             margin-bottom: 30px;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            cursor: pointer;
         }
-        
-        .form-group {
-            margin-bottom: 20px;
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
-        
-        select, input {
+
+        /* 首页样式 */
+        .games-waterfall {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 130px;
+            background: #f8fafc;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .game-info {
+            padding: 12px;
+        }
+
+        .game-name {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .game-tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            margin-right: 3px;
+            margin-bottom: 3px;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-header h3 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .password-input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
             font-size: 16px;
-            box-sizing: border-box;
-        }
-        
-        select:focus, input:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            display: block;
-            margin: 20px auto;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background-color: #0056b3;
-        }
-        
-        .result {
-            background-color: #e9f7ef;
-            padding: 20px;
-            border-radius: 5px;
-            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 15px 0;
             text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #27ae60;
-            display: none;
         }
-        
-        .price-info {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            border-left: 4px solid #007bff;
+
+        .password-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 0 8px;
         }
-        
-        .price-info h3 {
-            margin-top: 0;
-            color: #333;
-        }
-        
-        .price-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        
-        .price-table th, .price-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        
-        .price-table th {
-            background-color: #007bff;
+
+        .password-btn.cancel {
+            background: #ef4444;
             color: white;
         }
-        
-        .price-table tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        
-        .checkbox-group, .radio-group {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .checkbox-group label, .radio-group label {
-            display: flex;
-            align-items: center;
-        }
-        
-        #manualWeightInput {
-            margin-top: 10px;
-            display: none;
+
+        .password-btn.confirm {
+            background: #667eea;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h1>运费计算器</h1>
-        
-        <div class="form-group">
-            <label for="region">选择地区：</label>
-            <select id="region">
-                <option value="">请选择地区</option>
-                <option value="tongcheng">同城</option>
-                <option value="jiangzhehu">江浙沪</option>
-                <option value="beijing">北京、天津、山东、广东、河北、河南、湖北、湖南、甘肃、福建</option>
-                <option value="ningxia">宁夏</option>
-                <option value="jiangxi">江西</option>
-                <option value="yunnan">云南、广西、贵州</option>
-                <option value="sichuan">四川、山西、海南、辽宁、重庆、陕西</option>
-                <option value="neimeng">内蒙</option>
-                <option value="jilin">吉林、黑龙江</option>
-                <option value="xinjiang">新疆</option>
-                <option value="qinghai">青海</option>
-            </select>
+    <div class="container">
+        <div class="header" id="header">
+            <h1>🎮 电玩店包厢管理系统</h1>
+            <p>欢迎体验我们的游戏世界</p>
         </div>
-        
-        <div class="form-group">
-            <label>产品重量：</label>
-            <div class="radio-group">
-                <label>
-                    <input type="radio" name="weightOption" value="ps5" checked>
-                    选项1: PS5 约7kg
-                </label>
-                <label>
-                    <input type="radio" name="weightOption" value="vr">
-                    选项2: VR 约2kg
-                </label>
-                <label>
-                    <input type="radio" name="weightOption" value="manual">
-                    选项3: 手动输入重量
-                </label>
+
+        <div class="games-waterfall" id="gamesWaterfall"></div>
+    </div>
+
+    <!-- 密码输入模态框 -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>管理员登录</h3>
             </div>
-            <div id="manualWeightInput" class="form-group">
-                <input type="number" id="manualWeight" placeholder="请输入产品重量 (kg)" min="0.1" step="0.1">
+            <p>请输入管理员密码</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="输入密码">
+            <div>
+                <button class="password-btn cancel" id="cancelPassword">取消</button>
+                <button class="password-btn confirm" id="confirmPassword">确认</button>
             </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="discount">折扣率：</label>
-            <input type="number" id="discount" placeholder="请输入折扣率（如0.65表示6.5折）" min="0.1" max="1" step="0.01" value="0.65">
-        </div>
-        
-        <div class="form-group">
-            <label>增值服务：</label>
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="gas_column" value="1">
-                    气柱 (+1元)
-                </label>
-                <label>
-                    <input type="checkbox" id="photo_return" value="2">
-                    拍照回传 (+2元)
-                </label>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label>保价选项：</label>
-            <div class="radio-group">
-                <label>
-                    <input type="radio" name="insurance" value="500_1" checked>
-                    选项1: 500元 (1元)
-                </label>
-                <label>
-                    <input type="radio" name="insurance" value="800_3">
-                    选项2: 800元 (3元)
-                </label>
-                <label>
-                    <input type="radio" name="insurance" value="1000_5">
-                    选项3: 1000元 (5元)
-                </label>
-            </div>
-        </div>
-        
-        <button onclick="calculateShipping()">计算运费</button>
-        
-        <div id="result" class="result">
-            <p>基础运费：¥<span id="base_cost">0.0</span></p>
-            <p>折扣后基础运费：¥<span id="discounted_base_cost">0.0</span></p>
-            <p style="color: #e74c3c;">预计优惠：¥<span id="savings">0.0</span></p>
-            <p>增值服务费用：¥<span id="additional_cost">0.0</span></p>
-            <p>总运费：¥<span id="total_cost">0.0</span></p>
-        </div>
-        
-        <div class="price-info">
-            <h3>各地区运费标准</h3>
-            <table class="price-table">
-                <thead>
-                    <tr>
-                        <th>地区</th>
-                        <th>首重单价 (元/kg)</th>
-                        <th>续重单价 (元/kg)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>同城</td>
-                        <td>10</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>江浙沪</td>
-                        <td>11</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>北京、天津、山东、广东、河北、河南、湖北、湖南、甘肃、福建</td>
-                        <td>13</td>
-                        <td>5</td>
-                    </tr>
-                    <tr>
-                        <td>宁夏</td>
-                        <td>13</td>
-                        <td>5.5</td>
-                    </tr>
-                    <tr>
-                        <td>江西</td>
-                        <td>13</td>
-                        <td>4.5</td>
-                    </tr>
-                    <tr>
-                        <td>云南、广西、贵州</td>
-                        <td>15</td>
-                        <td>5.5</td>
-                    </tr>
-                    <tr>
-                        <td>四川、山西、海南、辽宁、重庆、陕西</td>
-                        <td>15</td>
-                        <td>5</td>
-                    </tr>
-                    <tr>
-                        <td>内蒙</td>
-                        <td>13</td>
-                        <td>5.5</td>
-                    </tr>
-                    <tr>
-                        <td>吉林、黑龙江</td>
-                        <td>15</td>
-                        <td>7</td>
-                    </tr>
-                    <tr>
-                        <td>新疆</td>
-                        <td>19</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td>青海</td>
-                        <td>14</td>
-                        <td>5.5</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 
     <script>
-        // 定义各地区的运费标准
-        const shippingRates = {
-            tongcheng: { firstWeightPrice: 10, additionalWeightPrice: 2 },
-            jiangzhehu: { firstWeightPrice: 11, additionalWeightPrice: 2 },
-            beijing: { firstWeightPrice: 13, additionalWeightPrice: 5 },
-            ningxia: { firstWeightPrice: 13, additionalWeightPrice: 5.5 },
-            jiangxi: { firstWeightPrice: 13, additionalWeightPrice: 4.5 },
-            yunnan: { firstWeightPrice: 15, additionalWeightPrice: 5.5 },
-            sichuan: { firstWeightPrice: 15, additionalWeightPrice: 5 },
-            neimeng: { firstWeightPrice: 13, additionalWeightPrice: 5.5 },
-            jilin: { firstWeightPrice: 15, additionalWeightPrice: 7 },
-            xinjiang: { firstWeightPrice: 19, additionalWeightPrice: 10 },
-            qinghai: { firstWeightPrice: 14, additionalWeightPrice: 5.5 }
+        // 全局变量
+        let gameData = null;
+        let clickCount = 0;
+        let lastClickTime = 0;
+        const ADMIN_PASSWORD = '123456';
+
+        // DOM元素缓存
+        const elements = {
+            header: document.getElementById('header'),
+            gamesWaterfall: document.getElementById('gamesWaterfall'),
+            passwordModal: document.getElementById('passwordModal'),
+            passwordInput: document.getElementById('passwordInput'),
+            confirmPassword: document.getElementById('confirmPassword'),
+            cancelPassword: document.getElementById('cancelPassword')
         };
 
-        // 显示/隐藏手动输入重量框
-        document.querySelectorAll('input[name="weightOption"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const manualWeightInput = document.getElementById('manualWeightInput');
-                if (this.value === 'manual') {
-                    manualWeightInput.style.display = 'block';
-                } else {
-                    manualWeightInput.style.display = 'none';
+        // 初始化应用
+        function init() {
+            loadData();
+            setupEventListeners();
+        }
+
+        // 加载数据
+        function loadData() {
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    gameData = data;
+                    // 从localStorage加载数据（如果有）
+                    const savedData = localStorage.getItem('gameRoomData');
+                    if (savedData) {
+                        try {
+                            const localData = JSON.parse(savedData);
+                            if (localData.rooms) gameData.rooms = localData.rooms;
+                            if (localData.machines) gameData.machines = localData.machines;
+                            if (localData.machineGames) gameData.machineGames = localData.machineGames;
+                        } catch (e) {
+                            console.error('Failed to parse saved data', e);
+                        }
+                    }
+                    renderGamesWaterfall();
+                })
+                .catch(error => {
+                    console.error('加载数据失败:', error);
+                    gameData = getDefaultData();
+                    renderGamesWaterfall();
+                });
+        }
+
+        // 获取默认数据
+        function getDefaultData() {
+            return {
+                rooms: [
+                    { id: 'room1', name: '包厢A', machines: [], note: '', activeSessions: {} },
+                    { id: 'room2', name: '包厢B', machines: [], note: '', activeSessions: {} }
+                ],
+                machines: [
+                    { id: 'machine1', name: 'PS5-01', image: 'https://placehold.co/120x120/blue/white?text=PS5' },
+                    { id: 'machine2', name: 'PS5-02', image: 'https://placehold.co/120x120/orange/white?text=PS5' },
+                    { id: 'machine3', name: 'Xbox-01', image: 'https://placehold.co/120x120/green/white?text=Xbox' },
+                    { id: 'machine4', name: 'Switch-01', image: 'https://placehold.co/120x120/red/white?text=Switch' },
+                    { id: 'machine5', name: 'PC-01', image: 'https://placehold.co/120x120/purple/white?text=PC' },
+                    { id: 'machine6', name: 'Arcade-01', image: 'https://placehold.co/120x120/yellow/white?text=Arcade' }
+                ],
+                games: [
+                    { id: 'game1', name: '战神4', image: 'https://placehold.co/120x120/orange/white?text=战神4', tags: ['动作', '冒险'] }
+                ],
+                machineGames: {}
+            };
+        }
+
+        // 保存到localStorage
+        function saveToLocalStorage() {
+            if (gameData) {
+                localStorage.setItem('gameRoomData', JSON.stringify({
+                    rooms: gameData.rooms,
+                    machines: gameData.machines,
+                    machineGames: gameData.machineGames
+                }));
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            if (elements.header) {
+                elements.header.addEventListener('click', handleHeaderClick);
+            }
+            
+            if (elements.confirmPassword) elements.confirmPassword.addEventListener('click', checkPassword);
+            if (elements.cancelPassword) elements.cancelPassword.addEventListener('click', () => {
+                elements.passwordModal.style.display = 'none';
+            });
+            if (elements.passwordInput) elements.passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
                 }
             });
-        });
-
-        function calculateShipping() {
-            // 获取用户输入
-            const region = document.getElementById('region').value;
-            const weightOption = document.querySelector('input[name="weightOption"]:checked').value;
-            let weight;
-            if (weightOption === 'ps5') {
-                weight = 7; // PS5 约7kg
-            } else if (weightOption === 'vr') {
-                weight = 2; // VR 约2kg
-            } else {
-                weight = parseFloat(document.getElementById('manualWeight').value);
-                if (isNaN(weight) || weight <= 0) {
-                    alert('请输入有效的产品重量！');
-                    return;
-                }
-            }
-            const discount = parseFloat(document.getElementById('discount').value) || 0.65; // 折扣率，默认0.65
-            const gasColumn = document.getElementById('gas_column').checked ? 1 : 0; // 气柱费用
-            const photoReturn = document.getElementById('photo_return').checked ? 2 : 0; // 拍照回传费用
-            const insuranceRadio = document.querySelector('input[name="insurance"]:checked');
-            const [insuranceAmount, insuranceFee] = insuranceRadio ? insuranceRadio.value.split('_').map(Number) : [0, 0]; // 保价金额和费用
-
-            const resultDiv = document.getElementById('result');
-            const baseCostSpan = document.getElementById('base_cost');
-            const discountedBaseCostSpan = document.getElementById('discounted_base_cost');
-            const savingsSpan = document.getElementById('savings'); // 新增：预计优惠
-            const additionalCostSpan = document.getElementById('additional_cost');
-            const totalCostSpan = document.getElementById('total_cost');
-
-            // 验证输入
-            if (!region) {
-                alert('请选择地区！');
-                return;
-            }
-
-            if (isNaN(discount) || discount < 0.1 || discount > 1) {
-                alert('折扣率必须在0.1到1之间！');
-                return;
-            }
-
-            // 获取对应地区的运费标准
-            const rates = shippingRates[region];
-
-            // 计算基础运费
-            // 基础运费 = (1 * 首重单价) + ((产品重量 - 1) * 续重单价)
-            let baseCost = (1 * rates.firstWeightPrice) + ((weight - 1) * rates.additionalWeightPrice);
-
-            // 计算折扣后基础运费
-            let discountedBaseCost = baseCost * discount;
-
-            // 计算预计优惠
-            let savings = baseCost - discountedBaseCost;
-
-            // 计算增值服务费用
-            let additionalCost = gasColumn + photoReturn + insuranceFee;
-
-            // 计算总运费
-            let totalCost = discountedBaseCost + additionalCost;
-
-            // 四舍五入到1位小数
-            baseCost = Math.round(baseCost * 10) / 10;
-            discountedBaseCost = Math.round(discountedBaseCost * 10) / 10;
-            savings = Math.round(savings * 10) / 10; // 四舍五入预计优惠
-            additionalCost = Math.round(additionalCost * 10) / 10;
-            totalCost = Math.round(totalCost * 10) / 10;
-
-            // 显示结果
-            baseCostSpan.textContent = baseCost.toFixed(1);
-            discountedBaseCostSpan.textContent = discountedBaseCost.toFixed(1);
-            savingsSpan.textContent = savings.toFixed(1); // 显示预计优惠
-            additionalCostSpan.textContent = additionalCost.toFixed(1);
-            totalCostSpan.textContent = totalCost.toFixed(1);
-
-            resultDiv.style.display = 'block';
         }
+
+        // 处理标题点击（用于进入管理员模式）
+        function handleHeaderClick() {
+            const now = Date.now();
+            if (now - lastClickTime < 1000) {
+                clickCount++;
+            } else {
+                clickCount = 1;
+            }
+            lastClickTime = now;
+
+            if (clickCount >= 5) {
+                showPasswordModal();
+                clickCount = 0;
+            }
+        }
+
+        // 显示密码输入模态框
+        function showPasswordModal() {
+            if (!elements.passwordModal) return;
+            
+            elements.passwordInput.value = '';
+            elements.passwordModal.style.display = 'flex';
+            setTimeout(() => {
+                if (elements.passwordInput) {
+                    elements.passwordInput.focus();
+                }
+            }, 100);
+        }
+
+        // 检查密码
+        function checkPassword() {
+            if (!elements.passwordInput) return;
+            
+            const password = elements.passwordInput.value;
+            if (password === ADMIN_PASSWORD) {
+                window.location.href = 'admin.html';
+            } else {
+                alert('密码错误，请重试！');
+                elements.passwordInput.value = '';
+                elements.passwordInput.focus();
+            }
+        }
+
+        // 渲染游戏瀑布流
+        function renderGamesWaterfall() {
+            if (!elements.gamesWaterfall || !gameData) return;
+            
+            const container = elements.gamesWaterfall;
+            container.innerHTML = '';
+
+            const allGames = [...gameData.games];
+            allGames.sort((a, b) => a.name.localeCompare(b.name));
+
+            allGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                
+                gameCard.innerHTML = `
+                    <div class="game-image" style="background-image: url(${game.image})"></div>
+                    <div class="game-info">
+                        <div class="game-name">${game.name}</div>
+                        <div class="game-tags">
+                            ${game.tags.map(tag => `<span class="game-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(gameCard);
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
     </script>
 </body>
 </html>
