@@ -47,7 +47,7 @@
             cursor: pointer;
             min-width: 100px;
         }
-        /* 功能按钮区域 */
+        /* 功能按钮区域 - 改为一排 */
         .action-buttons {
             display: flex;
             gap: 8px;
@@ -144,9 +144,10 @@
             overflow: hidden;
             border: 2px solid #e2e8f0;
             position: relative;
-            cursor: -webkit-grab;
-            cursor: grab;
+            cursor: pointer; /* 改为默认光标 */
             user-select: none;
+            display: flex;
+            flex-direction: column;
         }
         .machine-image {
             width: 100%;
@@ -163,41 +164,52 @@
             font-size: 12px;
             word-wrap: break-word;
         }
-        .machine-controls {
-            position: absolute;
-            top: 2px;
-            right: 2px;
+        /* 机器卡片底部按钮区域 */
+        .machine-actions {
             display: flex;
-            gap: 2px;
+            border-top: 1px solid #e2e8f0;
         }
-        .machine-edit, .machine-delete {
-            background: rgba(255,255,255,0.95);
+        .machine-action-btn {
+            flex: 1;
+            padding: 4px 0;
             border: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
+            background: #f1f5f9;
             font-size: 10px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: background-color 0.2s;
         }
-        .machine-edit {
-            background: #3b82f6;
-            color: white;
+        .machine-action-btn:hover {
+            background: #e2e8f0;
         }
-        .machine-delete {
-            background: #ef4444;
-            color: white;
+        .machine-action-btn.view {
+            color: #3b82f6;
         }
-        /* 包厢区域 */
+        .machine-action-btn.edit {
+            color: #10b981;
+        }
+        .machine-action-btn.delete {
+            color: #ef4444;
+        }
+        /* 包厢区域 - 响应式网格 */
         .game-rooms {
             flex: 2;
             min-width: 280px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            /* 默认手机端一列 */
+            grid-template-columns: 1fr;
             gap: 12px;
+        }
+        /* 在中等屏幕及以上显示两列 */
+        @media (min-width: 769px) {
+            .game-rooms {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        /* 在大屏幕及以上显示更多列 */
+        @media (min-width: 1025px) {
+            .game-rooms {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            }
         }
         .room-card {
             background: white;
@@ -620,6 +632,7 @@
             .session-controls {
                 flex-direction: column;
             }
+            /* 包厢区域在手机上保持一列 */
             .game-rooms {
                 grid-template-columns: 1fr;
             }
@@ -1059,40 +1072,56 @@
             name.className = 'machine-name';
             name.textContent = machine.name;
             div.appendChild(name);
+            
             if (isAvailable) {
-                const controls = document.createElement('div');
-                controls.className = 'machine-controls';
+                // 添加底部按钮区域
+                const actions = document.createElement('div');
+                actions.className = 'machine-actions';
+                
+                const viewBtn = document.createElement('button');
+                viewBtn.className = 'machine-action-btn view';
+                viewBtn.innerHTML = '👁️'; // 查看图标
+                viewBtn.title = '查看游戏';
+                viewBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showGames(machine.id);
+                });
+
                 const editBtn = document.createElement('button');
-                editBtn.className = 'machine-edit';
-                editBtn.innerHTML = '✏️';
+                editBtn.className = 'machine-action-btn edit';
+                editBtn.innerHTML = '✏️'; // 编辑图标
                 editBtn.title = '编辑机器';
                 editBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    e.preventDefault();
                     editMachine(machine.id);
                 });
-                controls.appendChild(editBtn);
+
                 const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'machine-delete';
-                deleteBtn.innerHTML = '🗑️';
+                deleteBtn.className = 'machine-action-btn delete';
+                deleteBtn.innerHTML = '🗑️'; // 删除图标
                 deleteBtn.title = '删除机器';
                 deleteBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    e.preventDefault();
                     deleteMachine(machine.id);
                 });
-                controls.appendChild(deleteBtn);
-                div.appendChild(controls);
+
+                actions.appendChild(viewBtn);
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
+                div.appendChild(actions);
             }
+            
             // 添加拖拽事件
             div.addEventListener('dragstart', handleDragStart);
             div.addEventListener('dragend', handleDragEnd);
-            // 添加点击事件查看游戏列表
-            div.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('machine-edit') && !e.target.classList.contains('machine-delete')) {
-                    showGames(machine.id);
-                }
-            });
+            
+            // 添加点击事件查看游戏列表 (可选，与底部按钮功能重复)
+            // div.addEventListener('click', (e) => {
+            //     if (!e.target.classList.contains('machine-action-btn')) {
+            //         showGames(machine.id);
+            //     }
+            // });
+            
             return div;
         }
         // 处理拖拽开始
