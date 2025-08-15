@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>管理员后台 - 电玩店包厢管理系统</title>
     <style>
         * {
@@ -15,7 +15,8 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
+            touch-action: manipulation;
         }
 
         .container {
@@ -27,41 +28,50 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .admin-header h1 {
             color: white;
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+            flex: 1;
         }
 
         .btn-primary {
             background: #667eea;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            min-width: 100px;
         }
 
         /* 功能按钮区域 */
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .action-btn {
-            padding: 8px 16px;
+            padding: 8px 12px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
         }
 
         .btn-info {
@@ -87,34 +97,33 @@
         /* 主要内容区域 */
         .main-content {
             display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
         }
 
         /* 可用机器区域 */
         .available-machines {
             flex: 1;
-            min-width: 280px;
+            min-width: 260px;
             background: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            min-height: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .available-machines h2 {
             color: #333;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
             border-bottom: 2px solid #667eea;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
         .machine-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
         }
 
         .machine-card {
@@ -123,44 +132,48 @@
             overflow: hidden;
             border: 2px solid #e2e8f0;
             position: relative;
+            cursor: -webkit-grab;
             cursor: grab;
+            user-select: none;
         }
 
         .machine-image {
             width: 100%;
-            height: 80px;
+            height: 70px;
             background: #f1f5f9;
             background-size: cover;
             background-position: center;
         }
 
         .machine-name {
-            padding: 8px;
+            padding: 6px;
             text-align: center;
             font-weight: 600;
             color: #333;
-            font-size: 13px;
+            font-size: 12px;
+            word-wrap: break-word;
         }
 
         .machine-controls {
             position: absolute;
-            top: 4px;
-            right: 4px;
+            top: 2px;
+            right: 2px;
             display: flex;
-            gap: 4px;
+            gap: 2px;
         }
 
         .machine-edit, .machine-delete {
-            background: rgba(255,255,255,0.9);
+            background: rgba(255,255,255,0.95);
             border: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            font-size: 12px;
+            font-size: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .machine-edit {
@@ -176,51 +189,56 @@
         /* 包厢区域 */
         .game-rooms {
             flex: 2;
-            min-width: 300px;
+            min-width: 280px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
         }
 
         .room-card {
             background: white;
             border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            padding: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .room-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
             border-bottom: 2px solid #667eea;
         }
 
         .room-header h3 {
             color: #333;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .room-controls {
             display: flex;
-            gap: 4px;
+            gap: 3px;
         }
 
         .room-edit, .room-delete {
             background: #3b82f6;
             color: white;
             border: none;
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .room-delete {
@@ -228,15 +246,15 @@
         }
 
         .machine-dropzone {
-            min-height: 60px;
+            min-height: 50px;
             background: #f8fafc;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 12px;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 10px;
             border: 2px dashed #cbd5e1;
             position: relative;
             z-index: 1;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .machine-dropzone.empty {
@@ -245,13 +263,14 @@
             align-items: center;
             color: #94a3b8;
             font-style: italic;
-            font-size: 12px;
+            font-size: 11px;
+            min-height: 50px;
         }
 
         .machine-in-room {
             background: #dbeafe;
-            padding: 8px;
-            margin: 3px 0;
+            padding: 6px;
+            margin: 2px 0;
             border-radius: 6px;
             display: flex;
             justify-content: space-between;
@@ -259,88 +278,95 @@
             border: 2px solid #93c5fd;
             position: relative;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .machine-name {
             font-weight: 600;
             color: #2563eb;
             flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .machine-remove-btn {
             background: #ef4444;
             color: white;
             border: none;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            font-size: 11px;
+            font-size: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .session-controls {
             display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .session-btn {
             flex: 1;
-            min-width: 80px;
-            padding: 6px;
-            font-size: 13px;
+            min-width: 70px;
+            padding: 5px;
+            font-size: 12px;
         }
 
         .note-section {
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .note-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .note-header label {
             font-weight: 600;
             color: #333;
+            font-size: 13px;
         }
 
         .note-content {
             background: #f8fafc;
-            padding: 8px;
+            padding: 6px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            min-height: 40px;
-            font-size: 13px;
+            border-radius: 6px;
+            min-height: 30px;
+            font-size: 12px;
             color: #333;
             word-wrap: break-word;
+            line-height: 1.4;
         }
 
         .session-info {
             background: #f0fdf4;
-            padding: 8px;
+            padding: 6px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             color: #16a34a;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border: 1px solid #bbf7d0;
         }
 
         .session-info h4 {
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             color: #059669;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .session-info p {
-            margin: 2px 0;
-            font-size: 11px;
+            margin: 1px 0;
+            font-size: 10px;
         }
 
         .time-left {
@@ -356,19 +382,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(2px);
         }
 
         .modal-content {
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
-            max-width: 700px;
-            width: 90%;
-            max-height: 80vh;
+            max-width: 95%;
+            width: 350px;
+            max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
@@ -391,8 +418,8 @@
             background: #ef4444;
             color: white;
             border: none;
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 16px;
@@ -425,62 +452,12 @@
             resize: vertical;
         }
 
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-        }
-
-        .game-item {
-            text-align: center;
-            position: relative;
-        }
-
-        .game-image {
-            width: 100%;
-            height: 120px;
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            font-size: 12px;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .game-name {
-            font-size: 13px;
-            color: #333;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .game-tags {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 3px;
-            margin-top: 2px;
-        }
-
-        .game-tag {
-            background: #667eea;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-        }
-
         .installed-games {
             margin: 10px 0;
             padding: 10px;
             background: #f1f5f9;
             border-radius: 6px;
-            min-height: 60px;
+            min-height: 50px;
         }
 
         .installed-games h4 {
@@ -558,8 +535,21 @@
                 flex-direction: column;
             }
             
-            .games-waterfall {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            .game-rooms {
+                grid-template-columns: 1fr;
+            }
+            
+            .available-machines, .game-rooms {
+                min-width: 100%;
+            }
+            
+            .machine-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20px;
             }
         }
     </style>
@@ -629,6 +619,7 @@
                 <label for="roomName">包厢名称</label>
                 <input type="text" id="roomName" placeholder="输入包厢名称">
             </div>
+            <button id="saveRoomBtn" class="btn-success">保存</button>
         </div>
     </div>
 
@@ -654,7 +645,7 @@
                 <h3 id="gamesModalTitle">游戏列表</h3>
                 <button class="modal-close" id="closeGamesModal">×</button>
             </div>
-            <div class="games-grid" id="gamesList"></div>
+            <div id="gamesList"></div>
         </div>
     </div>
 
@@ -665,6 +656,7 @@
         let currentEditingRoomId = null;
         let currentNoteRoomId = null;
         let currentSelectingMachine = null;
+        let dragSource = null;
 
         // DOM元素缓存
         const elements = {
@@ -686,6 +678,7 @@
             closeEditRoomModal: document.getElementById('closeEditRoomModal'),
             editRoomTitle: document.getElementById('editRoomTitle'),
             roomName: document.getElementById('roomName'),
+            saveRoomBtn: document.getElementById('saveRoomBtn'),
             editNoteModal: document.getElementById('editNoteModal'),
             closeEditNoteModal: document.getElementById('closeEditNoteModal'),
             editNoteTitle: document.getElementById('editNoteTitle'),
@@ -799,6 +792,8 @@
             if (elements.closeEditRoomModal) elements.closeEditRoomModal.addEventListener('click', () => {
                 elements.editRoomModal.style.display = 'none';
             });
+            
+            if (elements.saveRoomBtn) elements.saveRoomBtn.addEventListener('click', saveRoom);
 
             // 编辑备注模态框事件
             if (elements.closeEditNoteModal) elements.closeEditNoteModal.addEventListener('click', () => {
@@ -839,6 +834,7 @@
             div.className = 'machine-card';
             div.draggable = true;
             div.dataset.machineId = machine.id;
+            div.style.userSelect = 'none';
 
             const image = document.createElement('div');
             image.className = 'machine-image';
@@ -858,31 +854,37 @@
                 editBtn.className = 'machine-edit';
                 editBtn.innerHTML = '✏️';
                 editBtn.title = '编辑机器';
-                editBtn.onclick = (e) => {
+                editBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     editMachine(machine.id);
-                };
+                });
                 controls.appendChild(editBtn);
                 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'machine-delete';
                 deleteBtn.innerHTML = '🗑️';
                 deleteBtn.title = '删除机器';
-                deleteBtn.onclick = (e) => {
+                deleteBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     deleteMachine(machine.id);
-                };
+                });
                 controls.appendChild(deleteBtn);
                 
                 div.appendChild(controls);
             }
 
+            // 添加拖拽事件
+            div.addEventListener('dragstart', handleDragStart);
+            div.addEventListener('dragend', handleDragEnd);
+
             // 添加点击事件查看游戏列表
-            div.onclick = (e) => {
+            div.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('machine-edit') && !e.target.classList.contains('machine-delete')) {
                     showGames(machine.id);
                 }
-            };
+            });
 
             return div;
         }
@@ -890,9 +892,23 @@
         // 处理拖拽开始
         function handleDragStart(e) {
             if (e.target.dataset.machineId) {
+                dragSource = e.target;
                 e.dataTransfer.setData('text/plain', e.target.dataset.machineId);
                 e.dataTransfer.effectAllowed = 'move';
+                
+                // 添加拖拽样式
+                setTimeout(() => {
+                    e.target.style.opacity = '0.5';
+                }, 0);
             }
+        }
+
+        // 处理拖拽结束
+        function handleDragEnd(e) {
+            if (e.target.style) {
+                e.target.style.opacity = '1';
+            }
+            dragSource = null;
         }
 
         // 处理拖拽悬停
@@ -906,6 +922,8 @@
             e.preventDefault();
             e.stopPropagation();
             
+            if (!dragSource) return;
+            
             const machineId = e.dataTransfer.getData('text/plain');
             const room = gameData.rooms.find(r => r.id === roomId);
             const machine = gameData.machines.find(m => m.id === machineId);
@@ -916,6 +934,8 @@
                 renderAvailableMachines();
                 renderGameRooms();
             }
+            
+            dragSource = null;
         }
 
         // 渲染包厢
@@ -999,19 +1019,59 @@
             if (machineDropzone && !machineDropzone.querySelector('.empty')) {
                 machineDropzone.addEventListener('dragover', handleDragOver);
                 machineDropzone.addEventListener('drop', (e) => handleDrop(e, room.id));
+            } else if (machineDropzone) {
+                machineDropzone.addEventListener('dragover', handleDragOver);
+                machineDropzone.addEventListener('drop', (e) => handleDrop(e, room.id));
             }
 
             // 添加点击事件到机器名称
             const machineNames = div.querySelectorAll('.machine-name');
             machineNames.forEach(nameEl => {
-                nameEl.onclick = (e) => {
+                nameEl.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const machineId = Array.from(div.querySelectorAll('.machine-in-room')).find(el => 
                         el.querySelector('.machine-name') === nameEl
                     ).querySelector('.machine-remove-btn').onclick.toString().match(/'([^']+)'/)[1];
                     showGames(machineId);
-                };
+                });
             });
+
+            // 添加移除按钮事件
+            const removeBtns = div.querySelectorAll('.machine-remove-btn');
+            removeBtns.forEach((btn, index) => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const machineId = room.machines[index].id;
+                    removeMachine(room.id, machineId);
+                });
+            });
+
+            // 添加编辑包厢事件
+            const editBtn = div.querySelector('.room-edit');
+            if (editBtn) {
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    editRoom(room.id);
+                });
+            }
+
+            // 添加删除包厢事件
+            const deleteBtn = div.querySelector('.room-delete');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteRoom(room.id);
+                });
+            }
+
+            // 添加编辑备注事件
+            const editNoteBtn = div.querySelector('.edit-note-btn');
+            if (editNoteBtn) {
+                editNoteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    editNote(room.id);
+                });
+            }
 
             return div;
         }
@@ -1088,9 +1148,9 @@
                     const gameOption = document.createElement('span');
                     gameOption.className = 'game-option add';
                     gameOption.textContent = game.name;
-                    gameOption.onclick = () => {
+                    gameOption.addEventListener('click', () => {
                         addGameToMachine(machineId, game.id);
-                    };
+                    });
                     availableGamesList.appendChild(gameOption);
                 });
             }
@@ -1105,9 +1165,9 @@
                         const gameOption = document.createElement('span');
                         gameOption.className = 'game-option remove';
                         gameOption.textContent = game.name;
-                        gameOption.onclick = () => {
+                        gameOption.addEventListener('click', () => {
                             removeGameFromMachine(machineId, gameId);
-                        };
+                        });
                         installedGamesList.appendChild(gameOption);
                     }
                 });
@@ -1154,36 +1214,60 @@
             } else {
                 games.forEach(game => {
                     const gameItem = document.createElement('div');
-                    gameItem.className = 'game-item';
+                    gameItem.style.margin = '8px 0';
+                    gameItem.style.padding = '8px';
+                    gameItem.style.border = '1px solid #e2e8f0';
+                    gameItem.style.borderRadius = '6px';
+                    gameItem.style.backgroundColor = '#f8fafc';
                     
                     const image = document.createElement('div');
-                    image.className = 'game-image';
+                    image.style.width = '100%';
+                    image.style.height = '80px';
+                    image.style.background = '#f1f5f9';
+                    image.style.backgroundSize = 'cover';
+                    image.style.backgroundPosition = 'center';
+                    image.style.borderRadius = '4px';
+                    image.style.marginBottom = '6px';
                     if (game.image && game.image.trim() !== '') {
                         image.style.backgroundImage = `url(${game.image.trim()})`;
-                        image.style.backgroundSize = 'cover';
-                        image.style.backgroundPosition = 'center';
                     } else {
                         image.textContent = '无图片';
+                        image.style.display = 'flex';
+                        image.style.alignItems = 'center';
+                        image.style.justifyContent = 'center';
+                        image.style.color = '#94a3b8';
+                        image.style.fontSize = '12px';
                     }
+                    gameItem.appendChild(image);
                     
                     const name = document.createElement('div');
-                    name.className = 'game-name';
+                    name.style.fontWeight = '600';
+                    name.style.color = '#333';
+                    name.style.fontSize = '13px';
+                    name.style.marginBottom = '4px';
                     name.textContent = game.name;
+                    gameItem.appendChild(name);
                     
                     const tags = document.createElement('div');
-                    tags.className = 'game-tags';
+                    tags.style.display = 'flex';
+                    tags.style.flexWrap = 'wrap';
+                    tags.style.gap = '2px';
                     if (game.tags && game.tags.length > 0) {
                         game.tags.forEach(tag => {
                             const tagSpan = document.createElement('span');
-                            tagSpan.className = 'game-tag';
+                            tagSpan.style.background = '#667eea';
+                            tagSpan.style.color = 'white';
+                            tagSpan.style.padding = '2px 6px';
+                            tagSpan.style.borderRadius = '12px';
+                            tagSpan.style.fontSize = '0.7rem';
+                            tagSpan.style.marginRight = '3px';
+                            tagSpan.style.marginBottom = '3px';
                             tagSpan.textContent = tag;
                             tags.appendChild(tagSpan);
                         });
                     }
-                    
-                    gameItem.appendChild(image);
-                    gameItem.appendChild(name);
                     gameItem.appendChild(tags);
+                    
                     elements.gamesList.appendChild(gameItem);
                 });
             }
@@ -1206,6 +1290,47 @@
                 saveToLocalStorage();
                 renderGameRooms();
                 showMessage('新包厢已添加');
+            }
+        }
+
+        // 编辑包厢
+        function editRoom(roomId) {
+            const room = gameData.rooms.find(r => r.id === roomId);
+            if (!room) return;
+            
+            currentEditingRoomId = roomId;
+            
+            // 设置标题
+            if (elements.editRoomTitle) {
+                elements.editRoomTitle.textContent = `编辑 ${room.name}`;
+            }
+            
+            // 填充表单
+            if (elements.roomName) elements.roomName.value = room.name;
+            
+            elements.editRoomModal.style.display = 'flex';
+            setTimeout(() => {
+                if (elements.roomName) elements.roomName.focus();
+            }, 100);
+        }
+
+        // 保存包厢
+        function saveRoom() {
+            if (!currentEditingRoomId || !elements.roomName) return;
+            
+            const name = elements.roomName.value.trim();
+            if (!name) {
+                showMessage('包厢名称不能为空');
+                return;
+            }
+            
+            const room = gameData.rooms.find(r => r.id === currentEditingRoomId);
+            if (room) {
+                room.name = name;
+                saveToLocalStorage();
+                renderGameRooms();
+                elements.editRoomModal.style.display = 'none';
+                showMessage('包厢名称已更新');
             }
         }
 
@@ -1253,6 +1378,36 @@
                 renderAvailableMachines();
                 renderGameRooms();
                 showMessage('游戏机已删除');
+            }
+        }
+
+        // 删除包厢
+        function deleteRoom(roomId) {
+            if (gameData.rooms.length <= 1) {
+                showMessage('至少需要保留一个包厢');
+                return;
+            }
+
+            if (confirm('确定要删除这个包厢吗？包厢内的所有数据将被清除。')) {
+                gameData.rooms = gameData.rooms.filter(r => r.id !== roomId);
+                saveToLocalStorage();
+                renderAvailableMachines();
+                renderGameRooms();
+                showMessage('包厢已删除');
+            }
+        }
+
+        // 从包厢移除机器
+        function removeMachine(roomId, machineId) {
+            const room = gameData.rooms.find(r => r.id === roomId);
+            if (room) {
+                room.machines = room.machines.filter(m => m.id !== machineId);
+                if (room.activeSessions[machineId]) {
+                    delete room.activeSessions[machineId];
+                }
+                saveToLocalStorage();
+                renderAvailableMachines();
+                renderGameRooms();
             }
         }
 
