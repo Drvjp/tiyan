@@ -144,6 +144,31 @@
             background: #667eea;
             color: white;
         }
+
+        /* 搜索功能 */
+        .search-container {
+            position: relative;
+            margin: 0 auto 20px;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -151,6 +176,11 @@
         <div class="header" id="header">
             <h1>🎮 电玩店包厢管理系统</h1>
             <p>欢迎体验我们的游戏世界</p>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="globalSearch" class="search-input" placeholder="搜索游戏...">
+            <span class="search-icon">🔍</span>
         </div>
 
         <div class="games-waterfall" id="gamesWaterfall"></div>
@@ -185,7 +215,8 @@
             passwordModal: document.getElementById('passwordModal'),
             passwordInput: document.getElementById('passwordInput'),
             confirmPassword: document.getElementById('confirmPassword'),
-            cancelPassword: document.getElementById('cancelPassword')
+            cancelPassword: document.getElementById('cancelPassword'),
+            globalSearch: document.getElementById('globalSearch')
         };
 
         // 初始化应用
@@ -256,10 +287,12 @@
 
         // 设置事件监听器
         function setupEventListeners() {
+            // 标题点击事件
             if (elements.header) {
                 elements.header.addEventListener('click', handleHeaderClick);
             }
             
+            // 密码输入事件
             if (elements.confirmPassword) elements.confirmPassword.addEventListener('click', checkPassword);
             if (elements.cancelPassword) elements.cancelPassword.addEventListener('click', () => {
                 elements.passwordModal.style.display = 'none';
@@ -269,6 +302,14 @@
                     checkPassword();
                 }
             });
+
+            // 全局搜索
+            if (elements.globalSearch) {
+                elements.globalSearch.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    filterGames(searchTerm);
+                });
+            }
         }
 
         // 处理标题点击（用于进入管理员模式）
@@ -312,6 +353,42 @@
                 elements.passwordInput.value = '';
                 elements.passwordInput.focus();
             }
+        }
+
+        // 过滤游戏
+        function filterGames(searchTerm) {
+            if (!elements.gamesWaterfall || !gameData) return;
+            
+            const container = elements.gamesWaterfall;
+            container.innerHTML = '';
+
+            const allGames = [...gameData.games];
+            const filteredGames = allGames.filter(game => 
+                game.name.toLowerCase().includes(searchTerm)
+            );
+            filteredGames.sort((a, b) => a.name.localeCompare(b.name));
+
+            if (filteredGames.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: white; font-size: 1.2rem; margin-top: 20px;">未找到匹配的游戏</p>';
+                return;
+            }
+
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                
+                gameCard.innerHTML = `
+                    <div class="game-image" style="background-image: url(${game.image})"></div>
+                    <div class="game-info">
+                        <div class="game-name">${game.name}</div>
+                        <div class="game-tags">
+                            ${game.tags.map(tag => `<span class="game-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(gameCard);
+            });
         }
 
         // 渲染游戏瀑布流
