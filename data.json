@@ -1,52 +1,4 @@
 {
-  "rooms": [
-    {
-      "id": "room1",
-      "name": "包厢A",
-      "machines": [],
-      "note": "",
-      "activeSessions": {}
-    },
-    {
-      "id": "room2",
-      "name": "包厢B",
-      "machines": [],
-      "note": "",
-      "activeSessions": {}
-    }
-  ],
-  "machines": [
-    {
-      "id": "machine1",
-      "name": "PS5-01",
-      "image": "https://placehold.co/120x120/blue/white?text=PS5"
-    },
-    {
-      "id": "machine2",
-      "name": "PS5-02",
-      "image": "https://placehold.co/120x120/orange/white?text=PS5"
-    },
-    {
-      "id": "machine3",
-      "name": "Xbox-01",
-      "image": "https://placehold.co/120x120/green/white?text=Xbox"
-    },
-    {
-      "id": "machine4",
-      "name": "Switch-01",
-      "image": "https://placehold.co/120x120/red/white?text=Switch"
-    },
-    {
-      "id": "machine5",
-      "name": "PC-01",
-      "image": "https://placehold.co/120x120/purple/white?text=PC"
-    },
-    {
-      "id": "machine6",
-      "name": "Arcade-01",
-      "image": "https://placehold.co/120x120/yellow/white?text=Arcade"
-    }
-  ],
   "games": [
     {
       "id": "game1",
@@ -69,10 +21,10 @@
     {
       "id": "game3",
       "name": "地平线5",
-      "image": "https://placehold.co/120x120/green/white?text=地平线5",
+      "image": "https://gmedia.playstation.com/is/image/SIEPDC/honkai-star-rail-ver-3-5-hph-thumbnail-01-ps5-ja-jp-05aug25?$800px$",
       "tags": [
-        "赛车",
-        "开放世界"
+        "赛车 ",
+        "开放世界 "
       ]
     },
     {
@@ -219,6 +171,5 @@
         "3D"
       ]
     }
-  ],
-  "machineGames": {}
+  ]
 }
