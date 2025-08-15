@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>管理员后台 - 电玩店包厢管理系统</title>
     <style>
+        /* ... (CSS样式部分保持不变) ... */
         * {
             margin: 0;
             padding: 0;
@@ -773,62 +774,68 @@
         let extendMinutes = 0;
         let dragSource = null;
         const ADMIN_PASSWORD = '123456';
-        // DOM元素缓存
-        const elements = {
-            backToHome: document.getElementById('backToHome'),
-            addRoom: document.getElementById('addRoom'),
-            addMachine: document.getElementById('addMachine'),
-            editGames: document.getElementById('editGames'),
-            globalSearch: document.getElementById('globalSearch'),
-            machineSearch: document.getElementById('machineSearch'),
-            availableMachines: document.getElementById('availableMachines'),
-            gameRooms: document.getElementById('gameRooms'),
-            editMachineModal: document.getElementById('editMachineModal'),
-            closeEditMachineModal: document.getElementById('closeEditMachineModal'),
-            editMachineTitle: document.getElementById('editMachineTitle'),
-            machineName: document.getElementById('machineName'),
-            machineImage: document.getElementById('machineImage'),
-            installedGamesList: document.getElementById('installedGamesList'),
-            availableGamesList: document.getElementById('availableGamesList'),
-            installedGamesSearch: document.getElementById('installedGamesSearch'),
-            availableGamesSearch: document.getElementById('availableGamesSearch'),
-            saveMachineBtn: document.getElementById('saveMachineBtn'),
-            editRoomModal: document.getElementById('editRoomModal'),
-            closeEditRoomModal: document.getElementById('closeEditRoomModal'),
-            editRoomTitle: document.getElementById('editRoomTitle'),
-            roomName: document.getElementById('roomName'),
-            saveRoomBtn: document.getElementById('saveRoomBtn'),
-            editNoteModal: document.getElementById('editNoteModal'),
-            closeEditNoteModal: document.getElementById('closeEditNoteModal'),
-            editNoteTitle: document.getElementById('editNoteTitle'),
-            noteContent: document.getElementById('noteContent'),
-            saveNoteBtn: document.getElementById('saveNoteBtn'),
-            gamesModal: document.getElementById('gamesModal'),
-            closeGamesModal: document.getElementById('closeGamesModal'),
-            gamesModalTitle: document.getElementById('gamesModalTitle'),
-            gamesList: document.getElementById('gamesList'),
-            gamesSearch: document.getElementById('gamesSearch'),
-            selectMachineModal: document.getElementById('selectMachineModal'),
-            closeSelectMachineModal: document.getElementById('closeSelectMachineModal'),
-            selectMachineTitle: document.getElementById('selectMachineTitle'),
-            machineOptions: document.getElementById('machineOptions'),
-            durationModal: document.getElementById('durationModal'),
-            closeDurationModal: document.getElementById('closeDurationModal'),
-            durationTitle: document.getElementById('durationTitle'),
-            durationOptions: document.getElementById('durationOptions'),
-            extendModal: document.getElementById('extendModal'),
-            closeExtendModal: document.getElementById('closeExtendModal'),
-            extendMinutesInput: document.getElementById('extendMinutesInput'),
-            extendPasswordInput: document.getElementById('extendPasswordInput'),
-            confirmExtend: document.getElementById('confirmExtend'),
-            cancelExtend: document.getElementById('cancelExtend')
-        };
+        
+        // DOM元素缓存（在DOM加载完成后初始化）
+        let elements = {};
+        
         // 初始化应用
         function init() {
+            // ✅ 修复：在DOM加载完成后，再获取DOM元素
+            elements = {
+                backToHome: document.getElementById('backToHome'),
+                addRoom: document.getElementById('addRoom'),
+                addMachine: document.getElementById('addMachine'),
+                editGames: document.getElementById('editGames'),
+                globalSearch: document.getElementById('globalSearch'),
+                machineSearch: document.getElementById('machineSearch'),
+                availableMachines: document.getElementById('availableMachines'),
+                gameRooms: document.getElementById('gameRooms'),
+                editMachineModal: document.getElementById('editMachineModal'),
+                closeEditMachineModal: document.getElementById('closeEditMachineModal'),
+                editMachineTitle: document.getElementById('editMachineTitle'),
+                machineName: document.getElementById('machineName'),
+                machineImage: document.getElementById('machineImage'),
+                installedGamesList: document.getElementById('installedGamesList'),
+                availableGamesList: document.getElementById('availableGamesList'),
+                installedGamesSearch: document.getElementById('installedGamesSearch'),
+                availableGamesSearch: document.getElementById('availableGamesSearch'),
+                saveMachineBtn: document.getElementById('saveMachineBtn'),
+                editRoomModal: document.getElementById('editRoomModal'),
+                closeEditRoomModal: document.getElementById('closeEditRoomModal'),
+                editRoomTitle: document.getElementById('editRoomTitle'),
+                roomName: document.getElementById('roomName'),
+                saveRoomBtn: document.getElementById('saveRoomBtn'),
+                editNoteModal: document.getElementById('editNoteModal'),
+                closeEditNoteModal: document.getElementById('closeEditNoteModal'),
+                editNoteTitle: document.getElementById('editNoteTitle'),
+                noteContent: document.getElementById('noteContent'),
+                saveNoteBtn: document.getElementById('saveNoteBtn'),
+                gamesModal: document.getElementById('gamesModal'),
+                closeGamesModal: document.getElementById('closeGamesModal'),
+                gamesModalTitle: document.getElementById('gamesModalTitle'),
+                gamesList: document.getElementById('gamesList'),
+                gamesSearch: document.getElementById('gamesSearch'),
+                selectMachineModal: document.getElementById('selectMachineModal'),
+                closeSelectMachineModal: document.getElementById('closeSelectMachineModal'),
+                selectMachineTitle: document.getElementById('selectMachineTitle'),
+                machineOptions: document.getElementById('machineOptions'),
+                durationModal: document.getElementById('durationModal'),
+                closeDurationModal: document.getElementById('closeDurationModal'),
+                durationTitle: document.getElementById('durationTitle'),
+                durationOptions: document.getElementById('durationOptions'),
+                extendModal: document.getElementById('extendModal'),
+                closeExtendModal: document.getElementById('closeExtendModal'),
+                extendMinutesInput: document.getElementById('extendMinutesInput'),
+                extendPasswordInput: document.getElementById('extendPasswordInput'),
+                confirmExtend: document.getElementById('confirmExtend'),
+                cancelExtend: document.getElementById('cancelExtend')
+            };
+            
             loadData();
             setupEventListeners();
             startTimer();
         }
+        
         // 加载数据
         function loadData() {
             fetch('data.json')
@@ -863,6 +870,7 @@
                     renderGameRooms();
                 });
         }
+        
         // 获取默认数据
         function getDefaultData() {
             return {
@@ -884,6 +892,7 @@
                 machineGames: {}
             };
         }
+        
         // 保存到localStorage
         function saveToLocalStorage() {
             if (gameData) {
@@ -894,6 +903,7 @@
                 }));
             }
         }
+        
         // 设置事件监听器
         function setupEventListeners() {
             // 返回首页
@@ -999,6 +1009,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 elements.extendModal.style.display = 'none';
             });
         }
+        
         // 过滤可用机器
         function filterAvailableMachines(searchTerm) {
             if (!elements.availableMachines || !gameData) return;
@@ -1019,6 +1030,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }
             });
         }
+        
         // 过滤游戏列表
         function filterGamesList(searchTerm) {
             if (!elements.gamesList || !gameData) return;
@@ -1052,6 +1064,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 container.appendChild(gameCard);
             });
         }
+        
         // 渲染可用机器
         function renderAvailableMachines() {
             if (!elements.availableMachines || !gameData) return;
@@ -1071,6 +1084,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }
             });
         }
+        
         // 创建机器卡片
         function createMachineCard(machine, isAvailable = false) {
             const div = document.createElement('div');
@@ -1122,6 +1136,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             });
             return div;
         }
+        
         // 处理拖拽开始
         function handleDragStart(e) {
             if (e.target.dataset.machineId) {
@@ -1134,6 +1149,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }, 0);
             }
         }
+        
         // 处理拖拽结束
         function handleDragEnd(e) {
             if (e.target.style) {
@@ -1141,11 +1157,13 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             }
             dragSource = null;
         }
+        
         // 处理拖拽悬停
         function handleDragOver(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
         }
+        
         // 处理放置
         function handleDrop(e, roomId) {
             e.preventDefault();
@@ -1162,6 +1180,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             }
             dragSource = null;
         }
+        
         // 渲染包厢
         function renderGameRooms() {
             if (!elements.gameRooms || !gameData) return;
@@ -1172,6 +1191,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 container.appendChild(roomEl);
             });
         }
+        
         // 创建包厢卡片
         function createRoomCard(room) {
             const div = document.createElement('div');
@@ -1284,6 +1304,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             }
             return div;
         }
+        
         // 首次游玩
         function startNewSession(roomId) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1299,6 +1320,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showSelectMachineModal(roomId);
             }
         }
+        
         // 显示选择机器模态框
         function showSelectMachineModal(roomId) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1320,6 +1342,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             });
             elements.selectMachineModal.style.display = 'flex';
         }
+        
         // 显示选择时长模态框
         function showDurationModal(roomId, machineId) {
             elements.durationTitle.textContent = '选择时长';
@@ -1345,6 +1368,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             });
             elements.durationModal.style.display = 'flex';
         }
+        
         // 开始会话
         function startSession(roomId, machineId, duration) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1366,6 +1390,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             }
             showMessage(`开始游戏，时长: ${duration === 0 ? '计时模式' : duration + '小时'}`);
         }
+        
         // 显示加时续玩模态框
         function showExtendModal(roomId) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1395,6 +1420,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 if (elements.extendMinutesInput) elements.extendMinutesInput.focus();
             }, 100);
         }
+        
         // 检查加时续玩
         function checkExtend() {
             if (!elements.extendMinutesInput || !elements.extendPasswordInput) return;
@@ -1414,6 +1440,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             addExtendTime();
             elements.extendModal.style.display = 'none';
         }
+        
         // 添加加时时间
         function addExtendTime() {
             const room = gameData.rooms.find(r => r.id === currentRoomId);
@@ -1433,6 +1460,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }, additionalSeconds * 1000);
             }
         }
+        
         // 结束游玩
         function endSession(roomId) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1449,6 +1477,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }
             }
         }
+        
         // 编辑机器
         function editMachine(machineId) {
             const machine = gameData.machines.find(m => m.id === machineId);
@@ -1465,6 +1494,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             renderMachineGames(machineId);
             elements.editMachineModal.style.display = 'flex';
         }
+        
         // 渲染机器游戏列表
         function renderMachineGames(machineId, searchTerm = '', listType = 'all') {
             if (!elements.availableGamesList || !elements.installedGamesList) return;
@@ -1521,6 +1551,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }
             }
         }
+        
         // 保存机器
         function saveMachine() {
             if (!currentEditingMachineId || !elements.machineName || !elements.machineImage) return;
@@ -1545,6 +1576,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('机器信息已更新');
             }
         }
+        
         // 添加游戏到机器
         function addGameToMachine(machineId, gameId) {
             if (!gameData.machineGames[machineId]) {
@@ -1559,6 +1591,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('游戏已添加');
             }
         }
+        
         // 从机器移除游戏
         function removeGameFromMachine(machineId, gameId) {
             if (gameData.machineGames[machineId]) {
@@ -1570,6 +1603,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('游戏已移除');
             }
         }
+        
         // 显示游戏列表
         function showGames(machineId) {
             const machine = gameData.machines.find(m => m.id === machineId);
@@ -1638,6 +1672,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             }
             elements.gamesModal.style.display = 'flex';
         }
+        
         // 添加包厢
         function addRoom() {
             const name = prompt('请输入新包厢的名称:', `包厢${gameData.rooms.length + 1}`);
@@ -1655,6 +1690,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('新包厢已添加');
             }
         }
+        
         // 编辑包厢
         function editRoom(roomId) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1671,6 +1707,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 if (elements.roomName) elements.roomName.focus();
             }, 100);
         }
+        
         // 保存包厢
         function saveRoom() {
             if (!currentEditingRoomId || !elements.roomName) return;
@@ -1688,6 +1725,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('包厢名称已更新');
             }
         }
+        
         // 添加游戏机
         function addMachine() {
             const name = prompt('请输入新游戏机的名称:');
@@ -1706,6 +1744,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('新游戏机已添加');
             }
         }
+        
         // 删除机器
         function deleteMachine(machineId) {
             const machine = gameData.machines.find(m => m.id === machineId);
@@ -1729,6 +1768,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('游戏机已删除');
             }
         }
+        
         // 删除包厢
         function deleteRoom(roomId) {
             if (gameData.rooms.length <= 1) {
@@ -1743,6 +1783,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('包厢已删除');
             }
         }
+        
         // 从包厢移除机器
         function removeMachine(roomId, machineId) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1756,6 +1797,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 renderGameRooms();
             }
         }
+        
         // 编辑备注
         function editNote(roomId) {
             const room = gameData.rooms.find(r => r.id === roomId);
@@ -1771,6 +1813,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }
             }, 100);
         }
+        
         // 保存备注
         function saveNote() {
             if (!currentNoteRoomId || !elements.noteContent) return;
@@ -1783,10 +1826,12 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('备注已保存');
             }
         }
+        
         // 显示消息
         function showMessage(message) {
             alert(message);
         }
+        
         // 格式化时间
         function formatTimeLeft(seconds) {
             if (seconds === null) return '';
@@ -1795,6 +1840,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             const secs = seconds % 60;
             return `${hours}h${minutes}m${secs}s`;
         }
+        
         // 启动定时器
         function startTimer() {
             setInterval(() => {
@@ -1818,10 +1864,12 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 }
             }, 1000);
         }
+        
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             init();
         });
+        
         // 暴露全局函数
         window.startNewSession = startNewSession;
         window.showExtendModal = showExtendModal;
