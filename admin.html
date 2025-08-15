@@ -47,7 +47,7 @@
             cursor: pointer;
             min-width: 100px;
         }
-        /* 功能按钮区域 - 改为一排 */
+        /* 功能按钮区域 - 改为一行 */
         .action-buttons {
             display: flex;
             gap: 8px;
@@ -216,6 +216,28 @@
             border-radius: 12px;
             padding: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            /* 默认状态 */
+            border-left: 4px solid #667eea; /* 默认蓝色边框 */
+        }
+        /* 即将到期的包厢样式 */
+        .room-card.warning {
+            border-left-color: #f59e0b; /* 橙色边框 */
+            animation: pulseWarning 2s infinite;
+        }
+        /* 已到期的包厢样式 */
+        .room-card.danger {
+            border-left-color: #ef4444; /* 红色边框 */
+            animation: pulseDanger 1s infinite;
+        }
+        @keyframes pulseWarning {
+            0% { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.5); }
+            100% { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        }
+        @keyframes pulseDanger {
+            0% { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+            50% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.7); }
+            100% { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         }
         .room-header {
             display: flex;
@@ -363,21 +385,6 @@
             color: #333;
             font-size: 13px;
         }
-        /* 优化备注编辑按钮样式 */
-        .edit-note-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .edit-note-btn:hover {
-            background: #2563eb;
-        }
         .note-content {
             background: #f8fafc;
             padding: 6px;
@@ -389,35 +396,27 @@
             word-wrap: break-word;
             line-height: 1.4;
         }
-        /* 优化时间信息显示 */
         .session-info {
             background: #f0fdf4;
-            padding: 10px;
+            padding: 6px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 11px;
             color: #16a34a;
             margin-bottom: 8px;
             border: 1px solid #bbf7d0;
-            text-align: center; /* 居中显示 */
         }
         .session-info h4 {
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             color: #059669;
-            font-size: 14px;
-        }
-        .session-info p {
-            margin: 2px 0;
             font-size: 12px;
         }
-        /* 优化时间显示样式 */
-        .time-left {
-            font-weight: 700; /* 更粗 */
-            font-size: 16px; /* 更大 */
-            color: #dc2626;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* 添加阴影 */
+        .session-info p {
+            margin: 1px 0;
+            font-size: 10px;
         }
-        .start-time {
+        .time-left {
             font-weight: 600;
+            color: #dc2626;
         }
         /* 模态框样式 */
         .modal {
@@ -549,30 +548,8 @@
             flex: 1;
             font-size: 13px;
         }
-        /* 优化保存按钮样式 */
-        .save-btn {
-            background: linear-gradient(135deg, #4ade80, #22c55e);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            box-shadow: 0 2px 4px rgba(74, 222, 128, 0.3);
-            transition: all 0.2s ease;
-        }
-        .save-btn:hover {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            box-shadow: 0 4px 8px rgba(34, 197, 94, 0.4);
-            transform: translateY(-1px);
-        }
-        .save-btn:active {
-            transform: translateY(0);
-        }
-        /* 游戏搜索框样式 */
-        .game-search-container {
+        /* 游戏搜索框样式 - 用于模态框 */
+        .game-search-container-modal {
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -581,41 +558,20 @@
             padding: 2px 6px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .game-search-container input {
+        .game-search-container-modal input {
             border: none;
             outline: none;
             padding: 4px;
             font-size: 12px;
             flex: 1;
         }
-        .game-search-container button {
+        .game-search-container-modal button {
             background: none;
             border: none;
             cursor: pointer;
             padding: 2px;
             color: #667eea;
             font-size: 14px;
-        }
-        /* 搜索结果样式 */
-        .search-results {
-            margin-top: 10px;
-            padding: 8px;
-            background: #e0f2fe;
-            border-radius: 6px;
-            font-size: 12px;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        .search-result-item {
-            padding: 4px 0;
-            border-bottom: 1px solid #bae6fd;
-        }
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-        .search-result-machine {
-            font-weight: 600;
-            color: #0369a1;
         }
         @media (max-width: 768px) {
             .main-content {
@@ -705,7 +661,7 @@
                     <h4>可添加的游戏</h4>
                     <div id="availableGamesList"></div>
                 </div>
-                <button id="saveMachineBtn" class="save-btn">保存</button>
+                <button id="saveMachineBtn" class="btn-success">保存</button>
             </div>
         </div>
     </div>
@@ -720,7 +676,7 @@
                 <label for="roomName">包厢名称</label>
                 <input type="text" id="roomName" placeholder="输入包厢名称">
             </div>
-            <button id="saveRoomBtn" class="save-btn">保存</button>
+            <button id="saveRoomBtn" class="btn-success">保存</button>
         </div>
     </div>
     <!-- 编辑备注模态框 -->
@@ -734,15 +690,20 @@
                 <label for="noteContent">备注内容</label>
                 <textarea id="noteContent" placeholder="输入备注内容..."></textarea>
             </div>
-            <button id="saveNoteBtn" class="save-btn">保存备注</button>
+            <button id="saveNoteBtn" class="btn-success">保存备注</button>
         </div>
     </div>
-    <!-- 游戏列表模态框 -->
+    <!-- 游戏列表模态框 (查看已安装游戏) -->
     <div class="modal" id="gamesModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="gamesModalTitle">游戏列表</h3>
                 <button class="modal-close" id="closeGamesModal">×</button>
+            </div>
+            <!-- 添加搜索框到游戏列表模态框 -->
+            <div class="game-search-container-modal">
+                <input type="text" id="gamesModalSearch" placeholder="搜索已安装游戏...">
+                <button id="clearGamesModalSearch">×</button>
             </div>
             <div id="gamesList"></div>
         </div>
@@ -794,6 +755,7 @@
         // let extendMinutes = 0; // 不再需要这个全局变量
         let dragSource = null;
         const ADMIN_PASSWORD = '123456';
+        const WARNING_THRESHOLD = 5 * 60; // 5分钟警告阈值
         // DOM元素缓存
         const elements = {
             backToHome: document.getElementById('backToHome'),
@@ -829,6 +791,9 @@
             closeGamesModal: document.getElementById('closeGamesModal'),
             gamesModalTitle: document.getElementById('gamesModalTitle'),
             gamesList: document.getElementById('gamesList'),
+            // 添加游戏列表模态框的搜索元素
+            gamesModalSearch: document.getElementById('gamesModalSearch'),
+            clearGamesModalSearch: document.getElementById('clearGamesModalSearch'),
             selectMachineModal: document.getElementById('selectMachineModal'),
             closeSelectMachineModal: document.getElementById('closeSelectMachineModal'),
             selectMachineTitle: document.getElementById('selectMachineTitle'),
@@ -948,9 +913,17 @@
                 elements.editNoteModal.style.display = 'none';
             });
             if (elements.saveNoteBtn) elements.saveNoteBtn.addEventListener('click', saveNote);
-            // 游戏列表模态框事件
+            // 游戏列表模态框事件 (查看已安装游戏)
             if (elements.closeGamesModal) elements.closeGamesModal.addEventListener('click', () => {
                 elements.gamesModal.style.display = 'none';
+                // 关闭时清空搜索框
+                if (elements.gamesModalSearch) elements.gamesModalSearch.value = '';
+            });
+            // 添加游戏列表模态框的搜索事件
+            if (elements.gamesModalSearch) elements.gamesModalSearch.addEventListener('input', filterGamesInModal);
+            if (elements.clearGamesModalSearch) elements.clearGamesModalSearch.addEventListener('click', () => {
+                if (elements.gamesModalSearch) elements.gamesModalSearch.value = '';
+                filterGamesInModal(); // 重新渲染所有游戏
             });
             // 选择机器模态框事件
             if (elements.closeSelectMachineModal) elements.closeSelectMachineModal.addEventListener('click', () => {
@@ -1041,6 +1014,20 @@
             if (elements.machineGameSearch) elements.machineGameSearch.value = '';
             filterMachineGames(); // 重新渲染所有游戏
         }
+        // 过滤游戏列表模态框中的游戏
+        function filterGamesInModal() {
+            if (!elements.gamesList || !elements.gamesModalSearch) return;
+            const searchTerm = elements.gamesModalSearch.value.trim().toLowerCase();
+            const gameItems = elements.gamesList.querySelectorAll('.game-item'); // 假设每个游戏项都有一个类名
+            gameItems.forEach(item => {
+                const gameName = item.querySelector('div[style*="font-weight: 600"]')?.textContent.toLowerCase() || ''; // 获取游戏名称
+                if (gameName.includes(searchTerm)) {
+                    item.style.display = ''; // 显示匹配项
+                } else {
+                    item.style.display = 'none'; // 隐藏不匹配项
+                }
+            });
+        }
         // 渲染可用机器
         function renderAvailableMachines() {
             if (!elements.availableMachines || !gameData) return;
@@ -1115,13 +1102,6 @@
             div.addEventListener('dragstart', handleDragStart);
             div.addEventListener('dragend', handleDragEnd);
             
-            // 添加点击事件查看游戏列表 (可选，与底部按钮功能重复)
-            // div.addEventListener('click', (e) => {
-            //     if (!e.target.classList.contains('machine-action-btn')) {
-            //         showGames(machine.id);
-            //     }
-            // });
-            
             return div;
         }
         // 处理拖拽开始
@@ -1179,6 +1159,10 @@
             const div = document.createElement('div');
             div.className = 'room-card';
             div.dataset.roomId = room.id;
+            
+            // 移除之前可能添加的类
+            div.classList.remove('warning', 'danger');
+            
             let machinesHtml = '';
             if (room.machines.length === 0) {
                 machinesHtml = '<div class="machine-dropzone empty">拖拽机器到这里</div>';
@@ -1195,20 +1179,30 @@
                 });
                 machinesHtml += '</div>';
             }
+            
             const session = Object.values(room.activeSessions).find(s => s);
             let sessionInfo = '';
             if (session) {
                 const startTime = new Date(session.startTime).toLocaleTimeString();
                 const timeLeft = session.timeLeft !== null ? formatTimeLeft(session.timeLeft) : '';
-                // 优化时间信息显示
                 sessionInfo = `
                     <div class="session-info">
                         <h4>🎮 游戏中</h4>
-                        <p>开始时间: <span class="start-time">${startTime}</span></p>
-                        <p>剩余时间: <span class="time-left">${timeLeft}</span></p>
+                        <p>开始: ${startTime}</p>
+                        <p class="time-left">剩余: ${timeLeft}</p>
                     </div>
                 `;
+                
+                // 检查是否需要添加警告或危险类
+                if (session.timeLeft !== null) {
+                    if (session.timeLeft <= 0) {
+                        div.classList.add('danger'); // 已到期
+                    } else if (session.timeLeft <= WARNING_THRESHOLD) {
+                        div.classList.add('warning'); // 即将到期
+                    }
+                }
             }
+            
             div.innerHTML = `
                 <div class="room-header">
                     <h3>${room.name}</h3>
@@ -1226,7 +1220,7 @@
                 <div class="note-section">
                     <div class="note-header">
                         <label>备注:</label>
-                        <button class="edit-note-btn">编辑</button> <!-- 优化按钮样式 -->
+                        <button class="btn-info edit-note-btn">编辑</button>
                     </div>
                     <div class="note-content">${room.note || '暂无备注'}</div>
                 </div>
@@ -1566,7 +1560,7 @@
                 showMessage('游戏已移除');
             }
         }
-        // 显示游戏列表
+        // 显示游戏列表 (查看已安装游戏)
         function showGames(machineId) {
             const machine = gameData.machines.find(m => m.id === machineId);
             if (!machine) return;
@@ -1578,7 +1572,9 @@
                 elements.gamesList.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">暂无游戏</p>';
             } else {
                 games.forEach(game => {
+                    // 为每个游戏项添加一个类名以便于过滤
                     const gameItem = document.createElement('div');
+                    gameItem.className = 'game-item'; 
                     gameItem.style.margin = '8px 0';
                     gameItem.style.padding = '8px';
                     gameItem.style.border = '1px solid #e2e8f0';
@@ -1633,6 +1629,8 @@
                 });
             }
             elements.gamesModal.style.display = 'flex';
+            // 清空模态框内的搜索框
+            if (elements.gamesModalSearch) elements.gamesModalSearch.value = '';
         }
         // 添加包厢
         function addRoom() {
@@ -1810,7 +1808,7 @@
                 });
                 if (updated) {
                     saveToLocalStorage();
-                    renderGameRooms();
+                    renderGameRooms(); // 重新渲染以更新样式
                 }
             }, 1000);
         }
