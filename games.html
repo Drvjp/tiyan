@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>编辑游戏目录 - 电玩店包厢管理系统</title>
     <style>
         * {
@@ -15,7 +15,8 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 10px;
+            touch-action: manipulation;
         }
 
         .container {
@@ -27,41 +28,50 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .admin-header h1 {
             color: white;
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+            flex: 1;
         }
 
         .btn-primary {
             background: #667eea;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            min-width: 100px;
         }
 
         /* 功能按钮区域 */
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
             justify-content: center;
+            align-items: center;
         }
 
         .action-btn {
-            padding: 8px 16px;
+            padding: 8px 12px;
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
         }
 
         .btn-success {
@@ -77,6 +87,31 @@
         .btn-danger {
             background: #ef4444;
             color: white;
+        }
+
+        /* 搜索框样式 */
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 30px 8px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 16px;
         }
 
         /* 游戏列表区域 */
@@ -149,6 +184,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .game-edit {
@@ -169,19 +205,20 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(2px);
         }
 
         .modal-content {
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
-            max-width: 700px;
-            width: 90%;
-            max-height: 80vh;
+            max-width: 95%;
+            width: 350px;
+            max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
@@ -204,8 +241,8 @@
             background: #ef4444;
             color: white;
             border: none;
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 16px;
@@ -227,14 +264,15 @@
 
         .form-group input, .form-group textarea {
             width: 100%;
-            padding: 6px;
+            padding: 8px;
             border: 2px solid #e0e0e0;
             border-radius: 6px;
             font-size: 13px;
+            outline: none;
         }
 
         .form-group textarea {
-            min-height: 60px;
+            min-height: 80px;
             resize: vertical;
         }
 
@@ -272,6 +310,50 @@
             flex: 1;
             font-size: 13px;
         }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .search-container {
+                min-width: 100%;
+                margin-top: 5px;
+            }
+            
+            .games-list {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -283,17 +365,21 @@
 
         <div class="action-buttons">
             <button id="addNewGame" class="action-btn btn-success">+ 添加新游戏</button>
+            <div class="search-container">
+                <input type="text" id="gamesSearch" class="search-input" placeholder="搜索游戏...">
+                <span class="search-icon">🔍</span>
+            </div>
         </div>
 
         <div class="games-list" id="gamesList"></div>
     </div>
 
-    <!-- 添加新游戏模态框 -->
-    <div class="modal" id="addGameModal">
+    <!-- 添加/编辑游戏模态框 -->
+    <div class="modal" id="editGameModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">添加新游戏</h3>
-                <button class="modal-close" id="closeAddGameModal">×</button>
+                <h3 id="editGameTitle">添加新游戏</h3>
+                <button class="modal-close" id="closeEditGameModal">×</button>
             </div>
             <div class="form-group">
                 <label for="gameName">游戏名称</label>
@@ -309,7 +395,7 @@
                     <input type="text" id="tagInput" placeholder="输入标签后按回车">
                 </div>
             </div>
-            <button id="saveGameBtn" class="btn-success">保存游戏</button>
+            <button id="saveGameBtn" class="save-btn">保存游戏</button>
         </div>
     </div>
 
@@ -322,10 +408,11 @@
         const elements = {
             backToAdmin: document.getElementById('backToAdmin'),
             addNewGame: document.getElementById('addNewGame'),
+            gamesSearch: document.getElementById('gamesSearch'),
             gamesList: document.getElementById('gamesList'),
-            addGameModal: document.getElementById('addGameModal'),
-            closeAddGameModal: document.getElementById('closeAddGameModal'),
-            modalTitle: document.getElementById('modalTitle'),
+            editGameModal: document.getElementById('editGameModal'),
+            closeEditGameModal: document.getElementById('closeEditGameModal'),
+            editGameTitle: document.getElementById('editGameTitle'),
             gameName: document.getElementById('gameName'),
             gameImage: document.getElementById('gameImage'),
             tagsInput: document.getElementById('tagsInput'),
@@ -395,7 +482,7 @@
             if (elements.addNewGame) elements.addNewGame.addEventListener('click', () => {
                 // 重置为添加模式
                 currentEditingGameId = null;
-                elements.modalTitle.textContent = '添加新游戏';
+                elements.editGameTitle.textContent = '添加新游戏';
                 
                 // 清空表单
                 if (elements.gameName) elements.gameName.value = '';
@@ -406,15 +493,23 @@
                 const tagElements = elements.tagsInput.querySelectorAll('.tag');
                 tagElements.forEach(el => el.remove());
                 
-                elements.addGameModal.style.display = 'flex';
+                elements.editGameModal.style.display = 'flex';
                 setTimeout(() => {
                     if (elements.gameName) elements.gameName.focus();
                 }, 100);
             });
 
+            // 搜索功能
+            if (elements.gamesSearch) {
+                elements.gamesSearch.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    filterGames(searchTerm);
+                });
+            }
+
             // 关闭模态框
-            if (elements.closeAddGameModal) elements.closeAddGameModal.addEventListener('click', () => {
-                elements.addGameModal.style.display = 'none';
+            if (elements.closeEditGameModal) elements.closeEditGameModal.addEventListener('click', () => {
+                elements.editGameModal.style.display = 'none';
             });
             
             // 保存游戏
@@ -429,6 +524,46 @@
                     }
                 });
             }
+        }
+
+        // 过滤游戏
+        function filterGames(searchTerm) {
+            if (!elements.gamesList || !gameData) return;
+            
+            const container = elements.gamesList;
+            container.innerHTML = '';
+
+            const allGames = [...gameData.games];
+            const filteredGames = allGames.filter(game => 
+                game.name.toLowerCase().includes(searchTerm)
+            );
+            filteredGames.sort((a, b) => a.name.localeCompare(b.name));
+
+            if (filteredGames.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">未找到匹配的游戏</p>';
+                return;
+            }
+
+            filteredGames.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                
+                gameCard.innerHTML = `
+                    <div class="game-image" style="background-image: url(${game.image})"></div>
+                    <div class="game-info">
+                        <div class="game-name">${game.name}</div>
+                        <div class="game-tags">
+                            ${game.tags.map(tag => `<span class="game-tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="game-controls">
+                        <button class="game-edit" onclick="editGame('${game.id}')" title="编辑游戏">✏️</button>
+                        <button class="game-delete" onclick="deleteGame('${game.id}')" title="删除游戏">×</button>
+                    </div>
+                `;
+                
+                container.appendChild(gameCard);
+            });
         }
 
         // 渲染游戏列表
@@ -496,7 +631,7 @@
             if (!game) return;
             
             currentEditingGameId = gameId;
-            elements.modalTitle.textContent = `编辑 ${game.name}`;
+            elements.editGameTitle.textContent = `编辑 ${game.name}`;
             
             // 填充表单
             if (elements.gameName) elements.gameName.value = game.name;
@@ -511,7 +646,7 @@
                 addTag(tag);
             });
             
-            elements.addGameModal.style.display = 'flex';
+            elements.editGameModal.style.display = 'flex';
             setTimeout(() => {
                 if (elements.gameName) elements.gameName.focus();
             }, 100);
@@ -560,8 +695,9 @@
             
             saveToLocalStorage();
             renderGamesList();
-            elements.addGameModal.style.display = 'none';
+            elements.editGameModal.style.display = 'none';
             showMessage(currentEditingGameId ? '游戏信息已更新' : '新游戏已添加');
+            currentEditingGameId = null;
         }
 
         // 删除游戏
