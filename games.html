@@ -11,19 +11,16 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 10px;
             touch-action: manipulation;
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-
         .admin-header {
             display: flex;
             justify-content: space-between;
@@ -32,7 +29,6 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         .admin-header h1 {
             color: white;
             font-size: 1.8rem;
@@ -40,7 +36,6 @@
             text-align: center;
             flex: 1;
         }
-
         .btn-primary {
             background: #667eea;
             color: white;
@@ -52,7 +47,6 @@
             cursor: pointer;
             min-width: 100px;
         }
-
         /* 功能按钮区域 */
         .action-buttons {
             display: flex;
@@ -60,8 +54,8 @@
             margin-bottom: 15px;
             justify-content: center;
             align-items: center;
+            flex-wrap: wrap; /* 允许按钮换行 */
         }
-
         .action-btn {
             padding: 8px 12px;
             border: none;
@@ -72,30 +66,31 @@
             flex: 1;
             min-width: 100px;
             text-align: center;
+            white-space: nowrap; /* 防止按钮文字换行 */
         }
-
         .btn-success {
             background: #4ade80;
             color: white;
         }
-
         .btn-warning {
             background: #f59e0b;
             color: white;
         }
-
         .btn-danger {
             background: #ef4444;
             color: white;
         }
-
+        .btn-info {
+            background: #38bdf8; /* 新增的导出按钮颜色 */
+            color: white;
+        }
         /* 搜索框样式 */
         .search-container {
             position: relative;
             flex: 1;
             min-width: 200px;
+            margin-top: 5px; /* 在小屏幕上与按钮间距 */
         }
-
         .search-input {
             width: 100%;
             padding: 8px 30px 8px 10px;
@@ -104,7 +99,6 @@
             font-size: 13px;
             outline: none;
         }
-
         .search-icon {
             position: absolute;
             right: 10px;
@@ -113,7 +107,6 @@
             color: #94a3b8;
             font-size: 16px;
         }
-
         /* 游戏列表区域 */
         .games-list {
             display: grid;
@@ -121,7 +114,6 @@
             gap: 15px;
             margin-bottom: 20px;
         }
-
         .game-card {
             background: white;
             border-radius: 12px;
@@ -129,7 +121,6 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             position: relative;
         }
-
         .game-image {
             width: 100%;
             height: 130px;
@@ -138,25 +129,21 @@
             background-position: center;
             border-bottom: 2px solid #667eea;
         }
-
         .game-info {
             padding: 12px;
         }
-
         .game-name {
             font-size: 1.1rem;
             color: #333;
             margin-bottom: 5px;
             font-weight: 600;
         }
-
         .game-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 3px;
             margin-top: 2px;
         }
-
         .game-tag {
             background: #667eea;
             color: white;
@@ -164,7 +151,6 @@
             border-radius: 12px;
             font-size: 0.7rem;
         }
-
         .game-controls {
             position: absolute;
             top: 8px;
@@ -172,7 +158,6 @@
             display: flex;
             gap: 4px;
         }
-
         .game-edit, .game-delete {
             background: rgba(255,255,255,0.9);
             border: none;
@@ -186,17 +171,14 @@
             justify-content: center;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-
         .game-edit {
             background: #3b82f6;
             color: white;
         }
-
         .game-delete {
             background: #ef4444;
             color: white;
         }
-
         /* 模态框样式 */
         .modal {
             display: none;
@@ -211,7 +193,6 @@
             z-index: 1000;
             backdrop-filter: blur(2px);
         }
-
         .modal-content {
             background: white;
             padding: 20px;
@@ -222,7 +203,6 @@
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -231,12 +211,10 @@
             padding-bottom: 8px;
             border-bottom: 2px solid #e0e0e0;
         }
-
         .modal-header h3 {
             color: #333;
             font-size: 1.2rem;
         }
-
         .modal-close {
             background: #ef4444;
             color: white;
@@ -250,18 +228,15 @@
             align-items: center;
             justify-content: center;
         }
-
         .form-group {
             margin-bottom: 12px;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 4px;
             font-weight: 500;
             font-size: 13px;
         }
-
         .form-group input, .form-group textarea {
             width: 100%;
             padding: 8px;
@@ -270,12 +245,10 @@
             font-size: 13px;
             outline: none;
         }
-
         .form-group textarea {
             min-height: 80px;
             resize: vertical;
         }
-
         .tags-input {
             display: flex;
             flex-wrap: wrap;
@@ -287,7 +260,6 @@
             border-radius: 6px;
             font-size: 13px;
         }
-
         .tag {
             background: #667eea;
             color: white;
@@ -298,19 +270,16 @@
             align-items: center;
             gap: 4px;
         }
-
         .tag-remove {
             cursor: pointer;
             font-weight: bold;
         }
-
         .tag-input {
             border: none;
             outline: none;
             flex: 1;
             font-size: 13px;
         }
-
         .save-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -325,30 +294,25 @@
             transition: all 0.2s ease;
             box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
         }
-
         .save-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
         }
-
         .save-btn:active {
             transform: translateY(0);
         }
-
         @media (max-width: 768px) {
             .action-buttons {
-                flex-wrap: wrap;
+                flex-direction: column; /* 在小屏幕上垂直排列 */
+                align-items: stretch; /* 拉伸按钮宽度 */
             }
-            
             .search-container {
                 min-width: 100%;
                 margin-top: 5px;
             }
-            
             .games-list {
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             }
-            
             .modal-content {
                 width: 95%;
                 margin: 20px;
@@ -362,18 +326,16 @@
             <h1>🎮 编辑游戏目录</h1>
             <button id="backToAdmin" class="btn-primary">返回管理员界面</button>
         </div>
-
         <div class="action-buttons">
             <button id="addNewGame" class="action-btn btn-success">+ 添加新游戏</button>
+            <button id="exportData" class="action-btn btn-info">📤 导出JSON</button> <!-- 新增导出按钮 -->
             <div class="search-container">
                 <input type="text" id="gamesSearch" class="search-input" placeholder="搜索游戏...">
                 <span class="search-icon">🔍</span>
             </div>
         </div>
-
         <div class="games-list" id="gamesList"></div>
     </div>
-
     <!-- 添加/编辑游戏模态框 -->
     <div class="modal" id="editGameModal">
         <div class="modal-content">
@@ -398,16 +360,15 @@
             <button id="saveGameBtn" class="save-btn">保存游戏</button>
         </div>
     </div>
-
     <script>
         // 全局变量
         let gameData = null;
         let currentEditingGameId = null;
-
         // DOM元素缓存
         const elements = {
             backToAdmin: document.getElementById('backToAdmin'),
             addNewGame: document.getElementById('addNewGame'),
+            exportData: document.getElementById('exportData'), // 新增导出按钮缓存
             gamesSearch: document.getElementById('gamesSearch'),
             gamesList: document.getElementById('gamesList'),
             editGameModal: document.getElementById('editGameModal'),
@@ -419,13 +380,11 @@
             tagInput: document.getElementById('tagInput'),
             saveGameBtn: document.getElementById('saveGameBtn')
         };
-
         // 初始化应用
         function init() {
             loadData();
             setupEventListeners();
         }
-
         // 加载数据
         function loadData() {
             fetch('data.json')
@@ -450,7 +409,6 @@
                     renderGamesList();
                 });
         }
-
         // 获取默认数据
         function getDefaultData() {
             return {
@@ -459,7 +417,6 @@
                 ]
             };
         }
-
         // 保存到localStorage
         function saveToLocalStorage() {
             if (gameData) {
@@ -468,7 +425,6 @@
                 }));
             }
         }
-
         // 设置事件监听器
         function setupEventListeners() {
             // 返回管理员界面
@@ -477,28 +433,27 @@
                     window.location.href = 'admin.html';
                 });
             }
-
             // 添加新游戏
             if (elements.addNewGame) elements.addNewGame.addEventListener('click', () => {
                 // 重置为添加模式
                 currentEditingGameId = null;
                 elements.editGameTitle.textContent = '添加新游戏';
-                
                 // 清空表单
                 if (elements.gameName) elements.gameName.value = '';
                 if (elements.gameImage) elements.gameImage.value = '';
                 if (elements.tagInput) elements.tagInput.value = '';
-                
                 // 清空标签
                 const tagElements = elements.tagsInput.querySelectorAll('.tag');
                 tagElements.forEach(el => el.remove());
-                
                 elements.editGameModal.style.display = 'flex';
                 setTimeout(() => {
                     if (elements.gameName) elements.gameName.focus();
                 }, 100);
             });
-
+            // 导出JSON数据
+            if (elements.exportData) {
+                 elements.exportData.addEventListener('click', exportGameData);
+            }
             // 搜索功能
             if (elements.gamesSearch) {
                 elements.gamesSearch.addEventListener('input', function() {
@@ -506,15 +461,12 @@
                     filterGames(searchTerm);
                 });
             }
-
             // 关闭模态框
             if (elements.closeEditGameModal) elements.closeEditGameModal.addEventListener('click', () => {
                 elements.editGameModal.style.display = 'none';
             });
-            
             // 保存游戏
             if (elements.saveGameBtn) elements.saveGameBtn.addEventListener('click', saveGame);
-            
             // 添加标签
             if (elements.tagInput) {
                 elements.tagInput.addEventListener('keypress', function(e) {
@@ -525,29 +477,23 @@
                 });
             }
         }
-
         // 过滤游戏
         function filterGames(searchTerm) {
             if (!elements.gamesList || !gameData) return;
-            
             const container = elements.gamesList;
             container.innerHTML = '';
-
             const allGames = [...gameData.games];
-            const filteredGames = allGames.filter(game => 
+            const filteredGames = allGames.filter(game =>
                 game.name.toLowerCase().includes(searchTerm)
             );
             filteredGames.sort((a, b) => a.name.localeCompare(b.name));
-
             if (filteredGames.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">未找到匹配的游戏</p>';
                 return;
             }
-
             filteredGames.forEach(game => {
                 const gameCard = document.createElement('div');
                 gameCard.className = 'game-card';
-                
                 gameCard.innerHTML = `
                     <div class="game-image" style="background-image: url(${game.image})"></div>
                     <div class="game-info">
@@ -561,25 +507,19 @@
                         <button class="game-delete" onclick="deleteGame('${game.id}')" title="删除游戏">×</button>
                     </div>
                 `;
-                
                 container.appendChild(gameCard);
             });
         }
-
         // 渲染游戏列表
         function renderGamesList() {
             if (!elements.gamesList || !gameData) return;
-            
             const container = elements.gamesList;
             container.innerHTML = '';
-
             const allGames = [...gameData.games];
             allGames.sort((a, b) => a.name.localeCompare(b.name));
-
             allGames.forEach(game => {
                 const gameCard = document.createElement('div');
                 gameCard.className = 'game-card';
-                
                 gameCard.innerHTML = `
                     <div class="game-image" style="background-image: url(${game.image})"></div>
                     <div class="game-info">
@@ -593,17 +533,13 @@
                         <button class="game-delete" onclick="deleteGame('${game.id}')" title="删除游戏">×</button>
                     </div>
                 `;
-                
                 container.appendChild(gameCard);
             });
         }
-
         // 添加标签
         function addTag(tag) {
             if (!elements.tagsInput || !tag) return;
-            
             if (getTags().includes(tag)) return;
-            
             const tagSpan = document.createElement('span');
             tagSpan.className = 'tag';
             tagSpan.innerHTML = `${tag} <span class="tag-remove">×</span>`;
@@ -612,11 +548,9 @@
             };
             elements.tagsInput.insertBefore(tagSpan, elements.tagInput);
         }
-
         // 获取所有标签
         function getTags() {
             if (!elements.tagsInput) return [];
-            
             const tags = [];
             const tagElements = elements.tagsInput.querySelectorAll('.tag');
             tagElements.forEach(el => {
@@ -624,56 +558,44 @@
             });
             return tags;
         }
-
         // 编辑游戏
         function editGame(gameId) {
             const game = gameData.games.find(g => g.id === gameId);
             if (!game) return;
-            
             currentEditingGameId = gameId;
             elements.editGameTitle.textContent = `编辑 ${game.name}`;
-            
             // 填充表单
             if (elements.gameName) elements.gameName.value = game.name;
             if (elements.gameImage) elements.gameImage.value = game.image;
-            
             // 清空标签
             const tagElements = elements.tagsInput.querySelectorAll('.tag');
             tagElements.forEach(el => el.remove());
-            
             // 添加现有标签
             game.tags.forEach(tag => {
                 addTag(tag);
             });
-            
             elements.editGameModal.style.display = 'flex';
             setTimeout(() => {
                 if (elements.gameName) elements.gameName.focus();
             }, 100);
         }
-
         // 保存游戏
         function saveGame() {
             if (!elements.gameName || !elements.gameImage) return;
-            
             const name = elements.gameName.value.trim();
             const image = elements.gameImage.value.trim();
             const tags = getTags();
-            
             if (!name) {
                 showMessage('游戏名称不能为空');
                 return;
             }
-            
             if (!image) {
                 showMessage('图片URL不能为空');
                 return;
             }
-            
             if (tags.length === 0) {
                 tags.push('未分类');
             }
-            
             if (currentEditingGameId) {
                 // 编辑现有游戏
                 const game = gameData.games.find(g => g.id === currentEditingGameId);
@@ -692,47 +614,74 @@
                 };
                 gameData.games.push(newGame);
             }
-            
             saveToLocalStorage();
             renderGamesList();
             elements.editGameModal.style.display = 'none';
             showMessage(currentEditingGameId ? '游戏信息已更新' : '新游戏已添加');
             currentEditingGameId = null;
         }
-
         // 删除游戏
         function deleteGame(gameId) {
             const game = gameData.games.find(g => g.id === gameId);
             if (!game) return;
-            
             if (confirm(`确定要删除游戏 "${game.name}" 吗？`)) {
                 // 检查是否被任何机器使用
-                const used = Object.values(gameData.machineGames || {}).some(machineGames => 
+                const used = Object.values(gameData.machineGames || {}).some(machineGames =>
                     machineGames.includes(gameId)
                 );
-                
                 if (used) {
                     showMessage('该游戏已被机器使用，无法删除！');
                     return;
                 }
-                
                 gameData.games = gameData.games.filter(g => g.id !== gameId);
                 saveToLocalStorage();
                 renderGamesList();
                 showMessage('游戏已删除');
             }
         }
-
         // 显示消息
         function showMessage(message) {
             alert(message);
+        }
+
+        // 导出游戏数据为JSON文件
+        function exportGameData() {
+            if (!gameData || !gameData.games) {
+                showMessage('没有可导出的数据');
+                return;
+            }
+
+            try {
+                // 创建一个只包含游戏数据的对象
+                const exportData = {
+                    games: gameData.games
+                };
+
+                const dataStr = JSON.stringify(exportData, null, 2); // 格式化输出
+                const blob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'game_data_export.json'; // 设置下载文件名
+                document.body.appendChild(link);
+                link.click();
+
+                // 清理
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                showMessage('游戏数据已成功导出为 game_data_export.json');
+            } catch (error) {
+                console.error('导出失败:', error);
+                showMessage('导出失败: ' + error.message);
+            }
         }
 
         // 页面加载完成后初始化
         document.addEventListener('DOMContentLoaded', function() {
             init();
         });
-
         // 暴露全局函数
         window.editGame = editGame;
         window.deleteGame = deleteGame;
