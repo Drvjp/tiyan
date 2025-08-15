@@ -195,23 +195,14 @@
             flex: 2;
             min-width: 280px;
             display: grid;
-            /* 默认手机端 (非常窄的屏幕) 一列 */
+            /* 默认手机端一列 */
             grid-template-columns: 1fr;
             gap: 12px;
         }
-
-        /* 在屏幕宽度大于 600px 时 */
-        @media (min-width: 601px) {
+        /* 在中等屏幕及以上显示两列 */
+        @media (min-width: 769px) {
             .game-rooms {
-                /* 使用 auto-fit 来自动适应列数，最小宽度 260px */
-                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            }
-        }
-
-        /* 如果你*特别*想在某个宽度以上强制至少两列，可以取消下面的注释并调整断点 */
-        @media (min-width: 800px) { 
-            .game-rooms {
-                grid-template-columns: repeat(2, 1fr); 
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         /* 在大屏幕及以上显示更多列 */
