@@ -39,9 +39,9 @@
         /* 统一按钮样式 - 基础类 */
         .btn {
             border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 13px;
+            padding: 6px 10px; /* 减小内边距 */
+            border-radius: 6px; /* 稍微减小圆角 */
+            font-size: 12px; /* 减小字体 */
             font-weight: 600;
             cursor: pointer;
             text-align: center;
@@ -50,6 +50,7 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
+            white-space: nowrap; /* 防止文字换行 */
         }
         .btn:hover {
             transform: translateY(-1px);
@@ -83,35 +84,35 @@
             color: white;
             box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
         }
-        /* 功能按钮区域 */
+        /* 功能按钮区域 - 调整为更紧凑的一行 */
         .action-buttons {
             display: flex;
-            gap: 8px;
+            gap: 6px; /* 减小按钮间距 */
             margin-bottom: 15px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
         }
         .action-btn {
-            flex: 1;
-            min-width: 100px;
+            flex: 0 0 auto; /* 不伸缩，保持原始大小 */
+            min-width: 80px; /* 设置更小的最小宽度 */
         }
-        /* 搜索框样式 */
+        /* 搜索框样式 - 保持原样，但调整在按钮组中的行为 */
         .search-container {
             display: flex;
             align-items: center;
             background: white;
-            border-radius: 8px;
-            padding: 2px 8px;
+            border-radius: 6px; /* 与按钮圆角一致 */
+            padding: 2px 6px; /* 减小内边距 */
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             flex: 1;
-            max-width: 300px;
+            max-width: 250px; /* 稍微减小最大宽度 */
         }
         .search-container input {
             border: none;
             outline: none;
-            padding: 6px;
-            font-size: 14px;
+            padding: 4px; /* 减小内边距 */
+            font-size: 12px; /* 与按钮字体一致 */
             flex: 1;
             min-width: 0;
         }
@@ -119,9 +120,43 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding: 4px;
+            padding: 2px; /* 减小内边距 */
             color: #667eea;
-            font-size: 16px;
+            font-size: 14px; /* 稍微减小字体 */
+        }
+        /* 全局搜索结果样式 */
+        .global-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none; /* 默认隐藏 */
+        }
+        .global-search-result-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .global-search-result-item:last-child {
+            border-bottom: none;
+        }
+        .global-search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+        .global-search-result-machine {
+            font-weight: bold;
+            color: #3b82f6;
+        }
+        .global-search-result-not-installed {
+            color: #999;
+            font-style: italic;
         }
         /* 主要内容区域 */
         .main-content {
@@ -178,32 +213,33 @@
             font-size: 12px;
             word-wrap: break-word;
         }
-        /* 机器卡片底部按钮区域 */
-        .machine-actions {
+        .machine-controls {
+            position: absolute;
+            top: 2px;
+            right: 2px;
             display: flex;
-            border-top: 1px solid #e2e8f0;
+            gap: 2px;
         }
-        .machine-action-btn {
-            flex: 1;
-            padding: 6px 0;
+        .machine-edit, .machine-delete {
+            background: rgba(255,255,255,0.95);
             border: none;
-            background: #f1f5f9;
-            font-size: 12px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 10px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            color: #475569;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
-        .machine-action-btn:hover {
-            background: #e2e8f0;
+        .machine-edit {
+            background: #3b82f6;
+            color: white;
         }
-        .machine-action-btn.view {
-            color: #3b82f6;
-        }
-        .machine-action-btn.edit {
-            color: #10b981;
-        }
-        .machine-action-btn.delete {
-            color: #ef4444;
+        .machine-delete {
+            background: #ef4444;
+            color: white;
         }
         /* 包厢区域 */
         .game-rooms {
@@ -308,7 +344,6 @@
             text-overflow: ellipsis;
             cursor: pointer;
         }
-        /* 为包厢内的机器添加查看按钮 */
         .machine-view-btn {
             width: 20px;
             height: 20px;
@@ -538,6 +573,14 @@
             <button id="addRoom" class="action-btn btn btn-info">添加包厢</button>
             <button id="addMachine" class="action-btn btn btn-success">添加游戏机</button>
             <button id="editGames" class="action-btn btn btn-warning">编辑游戏目录</button>
+            <!-- 全局游戏搜索框 -->
+            <div class="search-container" style="position: relative;">
+                <input type="text" id="globalGameSearch" placeholder="全局搜索游戏...">
+                <button id="clearGlobalSearch">×</button>
+                <div id="globalSearchResults" class="global-search-results"></div>
+            </div>
+            <!-- 导出数据按钮 -->
+            <button id="exportData" class="action-btn btn btn-primary">导出数据</button>
         </div>
         <!-- 隐藏/显示已使用包厢按钮 -->
         <div style="text-align: center; margin-bottom: 10px;">
@@ -678,6 +721,12 @@
             addRoom: document.getElementById('addRoom'),
             addMachine: document.getElementById('addMachine'),
             editGames: document.getElementById('editGames'),
+            // 添加全局搜索相关元素
+            globalGameSearch: document.getElementById('globalGameSearch'),
+            clearGlobalSearch: document.getElementById('clearGlobalSearch'),
+            globalSearchResults: document.getElementById('globalSearchResults'),
+            // 添加导出按钮
+            exportData: document.getElementById('exportData'),
             availableMachines: document.getElementById('availableMachines'),
             gameRooms: document.getElementById('gameRooms'),
             editMachineModal: document.getElementById('editMachineModal'),
@@ -802,6 +851,11 @@
             if (elements.editGames) elements.editGames.addEventListener('click', () => {
                 window.location.href = 'games.html';
             });
+            // 全局游戏搜索事件
+            if (elements.globalGameSearch) elements.globalGameSearch.addEventListener('input', performGlobalGameSearch);
+            if (elements.clearGlobalSearch) elements.clearGlobalSearch.addEventListener('click', clearGlobalSearch);
+            // 导出数据事件
+            if (elements.exportData) elements.exportData.addEventListener('click', exportGameData);
             if (elements.closeEditMachineModal) elements.closeEditMachineModal.addEventListener('click', () => {
                 elements.editMachineModal.style.display = 'none';
             });
@@ -846,6 +900,111 @@
             });
             if (elements.toggleUsedRooms) {
                 elements.toggleUsedRooms.addEventListener('click', toggleUsedRooms);
+            }
+        }
+        // 执行全局游戏搜索
+        function performGlobalGameSearch() {
+            const searchTerm = elements.globalGameSearch.value.trim().toLowerCase();
+            const resultsContainer = elements.globalSearchResults;
+            
+            if (!searchTerm) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            // 清空之前的结果
+            resultsContainer.innerHTML = '';
+            
+            // 过滤游戏
+            const filteredGames = gameData.games.filter(game => 
+                game.name.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredGames.length === 0) {
+                resultsContainer.innerHTML = '<div class="global-search-result-item">未找到匹配的游戏</div>';
+            } else {
+                filteredGames.forEach(game => {
+                    // 查找安装了该游戏的机器
+                    const installedMachines = [];
+                    gameData.machines.forEach(machine => {
+                        const machineGames = gameData.machineGames[machine.id] || [];
+                        if (machineGames.includes(game.id)) {
+                            installedMachines.push(machine.name);
+                        }
+                    });
+                    
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'global-search-result-item';
+                    resultItem.dataset.gameId = game.id; // 存储游戏ID
+                    
+                    if (installedMachines.length > 0) {
+                        resultItem.innerHTML = `
+                            <div><strong>${game.name}</strong></div>
+                            <div>安装在: <span class="global-search-result-machine">${installedMachines.join(', ')}</span></div>
+                        `;
+                    } else {
+                        resultItem.innerHTML = `
+                            <div><strong>${game.name}</strong></div>
+                            <div class="global-search-result-not-installed">未安装在任何机器上</div>
+                        `;
+                    }
+                    
+                    // 为结果项添加点击事件（可选：跳转到编辑游戏页面或显示详情）
+                    resultItem.addEventListener('click', () => {
+                        // 这里可以添加点击结果后的操作，例如：
+                        // alert(`游戏: ${game.name}\n安装在: ${installedMachines.length > 0 ? installedMachines.join(', ') : '未安装'}`);
+                        // 或者跳转到游戏详情页
+                        elements.globalGameSearch.value = ''; // 清空搜索框
+                        resultsContainer.style.display = 'none'; // 隐藏结果
+                    });
+                    
+                    resultsContainer.appendChild(resultItem);
+                });
+            }
+            
+            // 显示结果容器
+            resultsContainer.style.display = 'block';
+        }
+        // 清除全局搜索
+        function clearGlobalSearch() {
+            if (elements.globalGameSearch) elements.globalGameSearch.value = '';
+            if (elements.globalSearchResults) elements.globalSearchResults.style.display = 'none';
+        }
+        // 导出游戏数据为JSON文件
+        function exportGameData() {
+            if (!gameData) {
+                showMessage('没有数据可导出');
+                return;
+            }
+            
+            try {
+                // 将gameData对象转换为JSON字符串
+                const jsonData = JSON.stringify(gameData, null, 2); // 使用2个空格缩进，便于阅读
+                
+                // 创建一个Blob对象
+                const blob = new Blob([jsonData], { type: 'application/json' });
+                
+                // 创建一个下载链接
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // 设置下载文件名，包含当前日期时间
+                const now = new Date();
+                const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+                a.download = `game_room_data_${timestamp}.json`;
+                
+                // 触发下载
+                document.body.appendChild(a);
+                a.click();
+                
+                // 清理
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showMessage('数据导出成功！');
+            } catch (error) {
+                console.error('导出数据时出错:', error);
+                showMessage('导出数据失败: ' + error.message);
             }
         }
         // 切换隐藏/显示已使用包厢
@@ -908,44 +1067,39 @@
             div.appendChild(name);
             
             if (isAvailable) {
-                const actions = document.createElement('div');
-                actions.className = 'machine-actions';
-                
-                const viewBtn = document.createElement('button');
-                viewBtn.className = 'machine-action-btn view btn';
-                viewBtn.innerHTML = '👁️';
-                viewBtn.title = '查看游戏';
-                viewBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showGames(machine.id);
-                });
-
+                const controls = document.createElement('div');
+                controls.className = 'machine-controls';
                 const editBtn = document.createElement('button');
-                editBtn.className = 'machine-action-btn edit btn';
+                editBtn.className = 'machine-edit btn';
                 editBtn.innerHTML = '✏️';
                 editBtn.title = '编辑机器';
                 editBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     editMachine(machine.id);
                 });
-
+                controls.appendChild(editBtn);
                 const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'machine-action-btn delete btn';
+                deleteBtn.className = 'machine-delete btn';
                 deleteBtn.innerHTML = '🗑️';
                 deleteBtn.title = '删除机器';
                 deleteBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     deleteMachine(machine.id);
                 });
-
-                actions.appendChild(viewBtn);
-                actions.appendChild(editBtn);
-                actions.appendChild(deleteBtn);
-                div.appendChild(actions);
+                controls.appendChild(deleteBtn);
+                div.appendChild(controls);
             }
             
             div.addEventListener('dragstart', handleDragStart);
             div.addEventListener('dragend', handleDragEnd);
+            // 添加点击事件查看游戏列表
+            div.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('machine-edit') && !e.target.classList.contains('machine-delete')) {
+                    showGames(machine.id);
+                }
+            });
             
             return div;
         }
