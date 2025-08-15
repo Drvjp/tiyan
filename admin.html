@@ -496,15 +496,78 @@
             color: #667eea;
             font-size: 14px;
         }
+        /* 新增：全局搜索区域样式 */
+        .global-search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .global-search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            padding: 2px 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            max-width: 300px;
+        }
+        .global-search-box input {
+            border: none;
+            outline: none;
+            padding: 6px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 0;
+        }
+        .global-search-box button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: #667eea;
+            font-size: 16px;
+        }
+        .export-btn {
+            flex: 0 0 auto; /* 不伸缩，保持原始大小 */
+        }
+        /* 新增：全局搜索结果区域样式 */
+        .global-search-results {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 15px;
+            display: none; /* 默认隐藏 */
+        }
+        .global-search-results h3 {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .global-search-results ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .global-search-results li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .global-search-results li:last-child {
+            border-bottom: none;
+        }
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
             }
-            .action-buttons {
+            .action-buttons, .global-search-container {
                 justify-content: center;
                 flex-direction: column;
             }
-            .search-container {
+            .search-container, .global-search-box {
                 max-width: 100%;
                 margin-top: 5px;
             }
@@ -525,6 +588,9 @@
                 width: 95%;
                 margin: 20px;
             }
+            .export-btn {
+                width: 100%; /* 在小屏幕上按钮占满宽度 */
+            }
         }
     </style>
 </head>
@@ -538,6 +604,21 @@
             <button id="addRoom" class="action-btn btn btn-info">添加包厢</button>
             <button id="addMachine" class="action-btn btn btn-success">添加游戏机</button>
             <button id="editGames" class="action-btn btn btn-warning">编辑游戏目录</button>
+        </div>
+
+        <!-- 新增：全局搜索和导出区域 -->
+        <div class="global-search-container">
+             <div class="global-search-box">
+                <input type="text" id="globalSearchInput" placeholder="搜索游戏名称...">
+                <button id="globalSearchButton">🔍</button>
+            </div>
+            <button id="exportData" class="btn btn-success export-btn">导出数据</button>
+        </div>
+
+        <!-- 新增：全局搜索结果显示区域 -->
+        <div class="global-search-results" id="globalSearchResults">
+            <h3>搜索结果</h3>
+            <ul id="globalSearchResultsList"></ul>
         </div>
         <!-- 隐藏/显示已使用包厢按钮 -->
         <div style="text-align: center; margin-bottom: 10px;">
@@ -719,7 +800,13 @@
             extendPasswordInput: document.getElementById('extendPasswordInput'),
             confirmExtend: document.getElementById('confirmExtend'),
             cancelExtend: document.getElementById('cancelExtend'),
-            toggleUsedRooms: document.getElementById('toggleUsedRooms')
+            toggleUsedRooms: document.getElementById('toggleUsedRooms'),
+            // 新增：全局搜索和导出相关元素
+            globalSearchInput: document.getElementById('globalSearchInput'),
+            globalSearchButton: document.getElementById('globalSearchButton'),
+            exportData: document.getElementById('exportData'),
+            globalSearchResults: document.getElementById('globalSearchResults'),
+            globalSearchResultsList: document.getElementById('globalSearchResultsList')
         };
         // 初始化应用
         function init() {
@@ -847,6 +934,15 @@
             if (elements.toggleUsedRooms) {
                 elements.toggleUsedRooms.addEventListener('click', toggleUsedRooms);
             }
+
+            // 新增：全局搜索和导出事件监听器
+            if (elements.globalSearchButton) elements.globalSearchButton.addEventListener('click', performGlobalSearch);
+            if (elements.globalSearchInput) elements.globalSearchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performGlobalSearch();
+                }
+            });
+            if (elements.exportData) elements.exportData.addEventListener('click', exportCurrentData);
         }
         // 切换隐藏/显示已使用包厢
         function toggleUsedRooms() {
@@ -875,6 +971,89 @@
                 }
             });
         }
+
+        // 新增：执行全局搜索
+        function performGlobalSearch() {
+            if (!elements.globalSearchInput || !elements.globalSearchResults || !elements.globalSearchResultsList || !gameData) return;
+
+            const searchTerm = elements.globalSearchInput.value.trim().toLowerCase();
+            if (!searchTerm) {
+                showMessage("请输入要搜索的游戏名称");
+                return;
+            }
+
+            elements.globalSearchResultsList.innerHTML = ''; // 清空之前的结果
+            let foundMachines = []; // 存储找到的机器名称
+
+            // 遍历所有游戏，找到匹配名称的游戏ID
+            const matchingGameIds = gameData.games
+                .filter(game => game.name.toLowerCase().includes(searchTerm))
+                .map(game => game.id);
+
+            if (matchingGameIds.length === 0) {
+                 // 如果没有找到匹配的游戏名称，则显示提示
+                const listItem = document.createElement('li');
+                listItem.textContent = `未找到名称包含 "${searchTerm}" 的游戏。`;
+                elements.globalSearchResultsList.appendChild(listItem);
+            } else {
+                // 遍历所有机器的已安装游戏列表
+                gameData.machines.forEach(machine => {
+                    const machineGameIds = gameData.machineGames[machine.id] || [];
+                    // 检查该机器是否安装了任何一个匹配的游戏
+                    const isGameInstalled = matchingGameIds.some(gameId => machineGameIds.includes(gameId));
+                    if (isGameInstalled) {
+                        foundMachines.push(machine.name);
+                    }
+                });
+
+                if (foundMachines.length > 0) {
+                    // 如果找到了安装该游戏的机器，则显示列表
+                    foundMachines.forEach(machineName => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = `机器: ${machineName}`;
+                        elements.globalSearchResultsList.appendChild(listItem);
+                    });
+                } else {
+                    // 如果没有机器安装了这个游戏，则显示提示
+                     matchingGameIds.forEach(gameId => {
+                         const game = gameData.games.find(g => g.id === gameId);
+                         if (game) {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = `游戏 "${game.name}" 未安装在任何机器上。`;
+                            elements.globalSearchResultsList.appendChild(listItem);
+                         }
+                     });
+                }
+            }
+
+            // 显示结果区域
+            elements.globalSearchResults.style.display = 'block';
+        }
+
+
+        // 新增：导出当前数据
+        function exportCurrentData() {
+            if (!gameData) {
+                showMessage("暂无数据可导出");
+                return;
+            }
+            try {
+                const dataStr = JSON.stringify(gameData, null, 2); // 格式化为可读的JSON
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(dataBlob);
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-'); // 创建安全的文件名时间戳
+                link.download = `game_room_data_${timestamp}.json`;
+                link.click();
+                URL.revokeObjectURL(link.href); // 清理内存
+                showMessage("数据已导出");
+            } catch (e) {
+                console.error("导出数据失败:", e);
+                showMessage("导出数据失败");
+            }
+        }
+
         // 渲染可用机器
         function renderAvailableMachines() {
             if (!elements.availableMachines || !gameData) return;
@@ -906,11 +1085,9 @@
             name.className = 'machine-name';
             name.textContent = machine.name;
             div.appendChild(name);
-            
             if (isAvailable) {
                 const actions = document.createElement('div');
                 actions.className = 'machine-actions';
-                
                 const viewBtn = document.createElement('button');
                 viewBtn.className = 'machine-action-btn view btn';
                 viewBtn.innerHTML = '👁️';
@@ -919,7 +1096,6 @@
                     e.stopPropagation();
                     showGames(machine.id);
                 });
-
                 const editBtn = document.createElement('button');
                 editBtn.className = 'machine-action-btn edit btn';
                 editBtn.innerHTML = '✏️';
@@ -928,7 +1104,6 @@
                     e.stopPropagation();
                     editMachine(machine.id);
                 });
-
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'machine-action-btn delete btn';
                 deleteBtn.innerHTML = '🗑️';
@@ -937,16 +1112,13 @@
                     e.stopPropagation();
                     deleteMachine(machine.id);
                 });
-
                 actions.appendChild(viewBtn);
                 actions.appendChild(editBtn);
                 actions.appendChild(deleteBtn);
                 div.appendChild(actions);
             }
-            
             div.addEventListener('dragstart', handleDragStart);
             div.addEventListener('dragend', handleDragEnd);
-            
             return div;
         }
         // 处理拖拽开始
@@ -1080,11 +1252,9 @@
                 const viewBtn = machineEl.querySelector('.machine-view-btn');
                 const nameSpan = machineEl.querySelector('.machine-name');
                 const removeBtn = machineEl.querySelector('.machine-remove-btn');
-                
                 const machineName = nameSpan.textContent;
                 const machine = room.machines.find(m => m.name === machineName);
                 const machineId = machine ? machine.id : null;
-                
                 if (machineId) {
                     if (viewBtn) {
                         viewBtn.addEventListener('click', (e) => {
@@ -1099,7 +1269,6 @@
                         });
                     }
                 }
-                
                 if (removeBtn) {
                     removeBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -1521,7 +1690,7 @@
         function deleteMachine(machineId) {
             const machine = gameData.machines.find(m => m.id === machineId);
             if (!machine) return;
-            const inUse = gameData.rooms.some(room => 
+            const inUse = gameData.rooms.some(room =>
                 room.machines.some(m => m.id === machineId)
             );
             if (inUse) {
