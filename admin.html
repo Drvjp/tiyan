@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>管理员后台 - 电玩店包厢管理系统</title>
     <style>
-        /* ... (CSS样式部分保持不变) ... */
+        /* ... CSS样式保持不变 ... */
         * {
             margin: 0;
             padding: 0;
@@ -613,6 +613,7 @@
     </style>
 </head>
 <body>
+    <!-- ... HTML结构保持不变 ... -->
     <div class="container">
         <div class="admin-header">
             <h1>🎮 管理员后台</h1>
@@ -642,6 +643,7 @@
             <div class="game-rooms" id="gameRooms"></div>
         </div>
     </div>
+    <!-- ... 所有模态框保持不变 ... -->
     <!-- 编辑游戏机模态框 -->
     <div class="modal" id="editMachineModal">
         <div class="modal-content">
@@ -775,12 +777,12 @@
         let dragSource = null;
         const ADMIN_PASSWORD = '123456';
         
-        // DOM元素缓存（在DOM加载完成后初始化）
+        // DOM元素缓存
         let elements = {};
         
         // 初始化应用
         function init() {
-            // ✅ 修复：在DOM加载完成后，再获取DOM元素
+            // ✅ 修复1：在DOM加载完成后，再获取DOM元素
             elements = {
                 backToHome: document.getElementById('backToHome'),
                 addRoom: document.getElementById('addRoom'),
@@ -831,6 +833,7 @@
                 cancelExtend: document.getElementById('cancelExtend')
             };
             
+            // ✅ 修复2：将数据加载和渲染逻辑重构
             loadData();
             setupEventListeners();
             startTimer();
@@ -838,37 +841,41 @@
         
         // 加载数据
         function loadData() {
-            fetch('data.json')
-                .then(response => response.json())
-                .then(data => {
-                    gameData = data;
-                    // 从localStorage加载数据（如果有）
-                    const savedData = localStorage.getItem('gameRoomData');
-                    if (savedData) {
-                        try {
-                            const localData = JSON.parse(savedData);
-                            if (localData.rooms) gameData.rooms = localData.rooms;
-                            if (localData.machines) gameData.machines = localData.machines;
-                            if (localData.machineGames) gameData.machineGames = localData.machineGames;
-                        } catch (e) {
-                            console.error('Failed to parse saved data', e);
-                        }
-                    }
-                    // 初始化所有机器的游戏列表
-                    gameData.machines.forEach(machine => {
-                        if (!gameData.machineGames[machine.id]) {
-                            gameData.machineGames[machine.id] = [];
-                        }
-                    });
-                    renderAvailableMachines();
-                    renderGameRooms();
-                })
-                .catch(error => {
-                    console.error('加载数据失败:', error);
-                    gameData = getDefaultData();
-                    renderAvailableMachines();
-                    renderGameRooms();
-                });
+            // 从localStorage加载数据（如果有）
+            const savedData = localStorage.getItem('gameRoomData');
+            if (savedData) {
+                try {
+                    const localData = JSON.parse(savedData);
+                    // 使用本地数据作为基础
+                    gameData = {
+                        rooms: localData.rooms || [],
+                        machines: localData.machines || [],
+                        games: localData.games || [],
+                        machineGames: localData.machineGames || {}
+                    };
+                    console.log('从localStorage加载数据成功');
+                } catch (e) {
+                    console.error('解析localStorage数据失败', e);
+                }
+            }
+
+            // 如果localStorage没有数据，则使用默认数据
+            if (!gameData) {
+                gameData = getDefaultData();
+                console.log('使用默认数据');
+            }
+
+            // 无论从哪里获取的数据，都进行初始化
+            // 初始化所有机器的游戏列表
+            gameData.machines.forEach(machine => {
+                if (!gameData.machineGames[machine.id]) {
+                    gameData.machineGames[machine.id] = [];
+                }
+            });
+
+            // 在这里进行渲染，因为gameData已经确保有值
+            renderAvailableMachines();
+            renderGameRooms();
         }
         
         // 获取默认数据
@@ -899,6 +906,7 @@
                 localStorage.setItem('gameRoomData', JSON.stringify({
                     rooms: gameData.rooms,
                     machines: gameData.machines,
+                    games: gameData.games,
                     machineGames: gameData.machineGames
                 }));
             }
@@ -906,19 +914,17 @@
         
         // 设置事件监听器
         function setupEventListeners() {
-            // 返回首页
+            // ... 事件监听器保持不变 ...
             if (elements.backToHome) {
                 elements.backToHome.addEventListener('click', () => {
                     window.location.href = 'index.html';
                 });
             }
-            // 功能按钮
             if (elements.addRoom) elements.addRoom.addEventListener('click', addRoom);
             if (elements.addMachine) elements.addMachine.addEventListener('click', addMachine);
             if (elements.editGames) elements.editGames.addEventListener('click', () => {
                 window.location.href = 'games.html';
             });
-            // 全局搜索
             if (elements.globalSearch) {
                 elements.globalSearch.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
@@ -927,15 +933,12 @@
                         renderGameRooms();
                         return;
                     }
-                    // 搜索游戏
                     const matchingGames = gameData.games.filter(game => 
                         game.name.toLowerCase().includes(searchTerm)
                     );
-                    // 创建结果消息
                     let message = `找到 ${matchingGames.length} 个匹配的游戏:
 `;
                     matchingGames.forEach(game => {
-                        // 查找安装了该游戏的机器
                         const machines = [];
                         Object.keys(gameData.machineGames).forEach(machineId => {
                             if (gameData.machineGames[machineId].includes(game.id)) {
@@ -949,40 +952,33 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     alert(message);
                 });
             }
-            // 机器搜索
             if (elements.machineSearch) {
                 elements.machineSearch.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
                     filterAvailableMachines(searchTerm);
                 });
             }
-            // 编辑机器模态框事件
             if (elements.closeEditMachineModal) elements.closeEditMachineModal.addEventListener('click', () => {
                 elements.editMachineModal.style.display = 'none';
             });
             if (elements.saveMachineBtn) elements.saveMachineBtn.addEventListener('click', saveMachine);
-            // 编辑包厢模态框事件
             if (elements.closeEditRoomModal) elements.closeEditRoomModal.addEventListener('click', () => {
                 elements.editRoomModal.style.display = 'none';
             });
             if (elements.saveRoomBtn) elements.saveRoomBtn.addEventListener('click', saveRoom);
-            // 编辑备注模态框事件
             if (elements.closeEditNoteModal) elements.closeEditNoteModal.addEventListener('click', () => {
                 elements.editNoteModal.style.display = 'none';
             });
             if (elements.saveNoteBtn) elements.saveNoteBtn.addEventListener('click', saveNote);
-            // 游戏列表模态框事件
             if (elements.closeGamesModal) elements.closeGamesModal.addEventListener('click', () => {
                 elements.gamesModal.style.display = 'none';
             });
-            // 游戏搜索
             if (elements.gamesSearch) {
                 elements.gamesSearch.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
                     filterGamesList(searchTerm);
                 });
             }
-            // 已安装游戏搜索
             if (elements.installedGamesSearch) {
                 elements.installedGamesSearch.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
@@ -991,7 +987,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     }
                 });
             }
-            // 可添加游戏搜索
             if (elements.availableGamesSearch) {
                 elements.availableGamesSearch.addEventListener('input', function() {
                     const searchTerm = this.value.toLowerCase();
@@ -1000,7 +995,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     }
                 });
             }
-            // 加时续玩模态框事件
             if (elements.closeExtendModal) elements.closeExtendModal.addEventListener('click', () => {
                 elements.extendModal.style.display = 'none';
             });
@@ -1014,7 +1008,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
         function filterAvailableMachines(searchTerm) {
             if (!elements.availableMachines || !gameData) return;
             const container = elements.availableMachines;
-            // 保留标题
             const titleDiv = container.querySelector('h2').parentElement;
             container.innerHTML = '';
             container.appendChild(titleDiv);
@@ -1069,7 +1062,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
         function renderAvailableMachines() {
             if (!elements.availableMachines || !gameData) return;
             const container = elements.availableMachines;
-            // 保留标题和搜索框
             const titleDiv = container.querySelector('h2').parentElement;
             container.innerHTML = '';
             container.appendChild(titleDiv);
@@ -1125,10 +1117,8 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 controls.appendChild(deleteBtn);
                 div.appendChild(controls);
             }
-            // 添加拖拽事件
             div.addEventListener('dragstart', handleDragStart);
             div.addEventListener('dragend', handleDragEnd);
-            // 添加点击事件查看游戏列表
             div.addEventListener('click', (e) => {
                 if (!e.target.classList.contains('machine-edit') && !e.target.classList.contains('machine-delete')) {
                     showGames(machine.id);
@@ -1143,7 +1133,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 dragSource = e.target;
                 e.dataTransfer.setData('text/plain', e.target.dataset.machineId);
                 e.dataTransfer.effectAllowed = 'move';
-                // 添加拖拽样式
                 setTimeout(() => {
                     e.target.style.opacity = '0.5';
                 }, 0);
@@ -1249,7 +1238,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 </div>
                 ${sessionInfo}
             `;
-            // 添加拖拽事件监听器
             const machineDropzone = div.querySelector('.machine-dropzone');
             if (machineDropzone && !machineDropzone.querySelector('.empty')) {
                 machineDropzone.addEventListener('dragover', handleDragOver);
@@ -1258,7 +1246,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 machineDropzone.addEventListener('dragover', handleDragOver);
                 machineDropzone.addEventListener('drop', (e) => handleDrop(e, room.id));
             }
-            // 添加点击事件到机器名称
             const machineNames = div.querySelectorAll('.machine-name');
             machineNames.forEach(nameEl => {
                 nameEl.addEventListener('click', (e) => {
@@ -1269,7 +1256,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     showGames(machineId);
                 });
             });
-            // 添加移除按钮事件
             const removeBtns = div.querySelectorAll('.machine-remove-btn');
             removeBtns.forEach((btn, index) => {
                 btn.addEventListener('click', (e) => {
@@ -1278,7 +1264,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     removeMachine(room.id, machineId);
                 });
             });
-            // 添加编辑包厢事件
             const editBtn = div.querySelector('.room-edit');
             if (editBtn) {
                 editBtn.addEventListener('click', (e) => {
@@ -1286,7 +1271,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     editRoom(room.id);
                 });
             }
-            // 添加删除包厢事件
             const deleteBtn = div.querySelector('.room-delete');
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', (e) => {
@@ -1294,7 +1278,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     deleteRoom(room.id);
                 });
             }
-            // 添加编辑备注事件
             const editNoteBtn = div.querySelector('.edit-note-btn');
             if (editNoteBtn) {
                 editNoteBtn.addEventListener('click', (e) => {
@@ -1313,10 +1296,8 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 return;
             }
             if (room.machines.length === 1) {
-                // 只有一台机器，直接选择
                 showDurationModal(roomId, room.machines[0].id);
             } else {
-                // 多台机器，先选择机器
                 showSelectMachineModal(roomId);
             }
         }
@@ -1398,21 +1379,17 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 showMessage('请先为包厢添加游戏机！');
                 return;
             }
-            // 检查是否有进行中的会话
             const activeMachineId = Object.keys(room.activeSessions).find(id => room.activeSessions[id]);
             if (!activeMachineId) {
                 showMessage('当前没有进行中的游戏会话！');
                 return;
             }
-            // 检查是否为计时模式
             if (room.activeSessions[activeMachineId].duration === 0) {
                 showMessage('计时模式无法加时，请使用首次游玩功能！');
                 return;
             }
-            // 设置全局变量
             currentRoomId = roomId;
             currentMachineId = activeMachineId;
-            // 显示输入时间模态框
             if (elements.extendMinutesInput) elements.extendMinutesInput.value = '30';
             if (elements.extendPasswordInput) elements.extendPasswordInput.value = '';
             elements.extendModal.style.display = 'flex';
@@ -1448,13 +1425,11 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 const session = room.activeSessions[currentMachineId];
                 const additionalSeconds = extendMinutes * 60;
                 session.timeLeft += additionalSeconds;
-                // 更新结束时间
                 const endTime = new Date(new Date(session.endTime).getTime() + additionalSeconds * 1000);
                 session.endTime = endTime.toISOString();
                 saveToLocalStorage();
                 renderGameRooms();
                 showMessage(`成功为 ${room.name} 续玩 ${extendMinutes} 分钟`);
-                // 设置超时提醒
                 setTimeout(() => {
                     showMessage(`${room.name} 的游戏时间已到！`);
                 }, additionalSeconds * 1000);
@@ -1483,14 +1458,11 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             const machine = gameData.machines.find(m => m.id === machineId);
             if (!machine) return;
             currentEditingMachineId = machineId;
-            // 设置标题
             if (elements.editMachineTitle) {
                 elements.editMachineTitle.textContent = `编辑 ${machine.name}`;
             }
-            // 填充表单
             if (elements.machineName) elements.machineName.value = machine.name;
             if (elements.machineImage) elements.machineImage.value = machine.image;
-            // 渲染游戏列表
             renderMachineGames(machineId);
             elements.editMachineModal.style.display = 'flex';
         }
@@ -1500,7 +1472,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             if (!elements.availableGamesList || !elements.installedGamesList) return;
             const availableGamesList = elements.availableGamesList;
             const installedGamesList = elements.installedGamesList;
-            // 清空列表
             if (listType === 'all' || listType === 'installed') {
                 installedGamesList.innerHTML = '';
             }
@@ -1509,11 +1480,9 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             }
             const machineGames = gameData.machineGames[machineId] || [];
             const allGames = gameData.games;
-            // 过滤游戏
             const filteredGames = allGames.filter(game => 
                 game.name.toLowerCase().includes(searchTerm)
             );
-            // 可添加的游戏
             if (listType === 'all' || listType === 'available') {
                 const availableGames = filteredGames.filter(game => !machineGames.includes(game.id));
                 if (availableGames.length === 0) {
@@ -1530,7 +1499,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     });
                 }
             }
-            // 已安装的游戏
             if (listType === 'all' || listType === 'installed') {
                 const installedGames = filteredGames.filter(game => machineGames.includes(game.id));
                 if (installedGames.length === 0) {
@@ -1585,7 +1553,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             if (!gameData.machineGames[machineId].includes(gameId)) {
                 gameData.machineGames[machineId].push(gameId);
                 saveToLocalStorage();
-                // 保持搜索状态
                 const searchTerm = elements.installedGamesSearch?.value || '';
                 renderMachineGames(machineId, searchTerm);
                 showMessage('游戏已添加');
@@ -1597,7 +1564,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             if (gameData.machineGames[machineId]) {
                 gameData.machineGames[machineId] = gameData.machineGames[machineId].filter(id => id !== gameId);
                 saveToLocalStorage();
-                // 保持搜索状态
                 const searchTerm = elements.availableGamesSearch?.value || '';
                 renderMachineGames(machineId, searchTerm);
                 showMessage('游戏已移除');
@@ -1696,11 +1662,9 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
             const room = gameData.rooms.find(r => r.id === roomId);
             if (!room) return;
             currentEditingRoomId = roomId;
-            // 设置标题
             if (elements.editRoomTitle) {
                 elements.editRoomTitle.textContent = `编辑 ${room.name}`;
             }
-            // 填充表单
             if (elements.roomName) elements.roomName.value = room.name;
             elements.editRoomModal.style.display = 'flex';
             setTimeout(() => {
@@ -1736,7 +1700,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                     image: 'https://placehold.co/120x120/blue/white?text=' + encodeURIComponent(name.trim())
                 };
                 gameData.machines.push(newMachine);
-                // 初始化机器游戏列表
                 gameData.machineGames[newMachine.id] = [];
                 saveToLocalStorage();
                 renderAvailableMachines();
@@ -1749,7 +1712,6 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
         function deleteMachine(machineId) {
             const machine = gameData.machines.find(m => m.id === machineId);
             if (!machine) return;
-            // 检查机器是否在使用中
             const inUse = gameData.rooms.some(room => 
                 room.machines.some(m => m.id === machineId)
             );
@@ -1758,9 +1720,7 @@ ${game.name}: ${machines.length > 0 ? machines.join(', ') : '未安装'}`;
                 return;
             }
             if (confirm(`确定要删除游戏机 "${machine.name}" 吗？`)) {
-                // 从机器列表中删除
                 gameData.machines = gameData.machines.filter(m => m.id !== machineId);
-                // 从机器游戏列表中删除
                 delete gameData.machineGames[machineId];
                 saveToLocalStorage();
                 renderAvailableMachines();
