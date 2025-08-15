@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -272,12 +273,6 @@
             flex: 1;
             font-size: 13px;
         }
-
-        @media (max-width: 768px) {
-            .games-list {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-        }
     </style>
 </head>
 <body>
@@ -298,33 +293,8 @@
     <div class="modal" id="addGameModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>添加新游戏</h3>
+                <h3 id="modalTitle">添加新游戏</h3>
                 <button class="modal-close" id="closeAddGameModal">×</button>
-            </div>
-            <div class="form-group">
-                <label for="gameName">游戏名称</label>
-                <input type="text" id="gameName" placeholder="输入游戏名称">
-            </div>
-            <div class="form-group">
-                <label for="gameImage">图片URL</label>
-                <input type="text" id="gameImage" placeholder="输入图片URL">
-            </div>
-            <div class="form-group">
-                <label>游戏标签</label>
-                <div class="tags-input" id="tagsInput">
-                    <input type="text" id="tagInput" placeholder="输入标签后按回车">
-                </div>
-            </div>
-            <button id="saveGameBtn" class="btn-success">保存游戏</button>
-        </div>
-    </div>
-
-    <!-- 编辑游戏模态框 -->
-    <div class="modal" id="editGameModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="editGameTitle">编辑游戏</h3>
-                <button class="modal-close" id="closeEditGameModal">×</button>
             </div>
             <div class="form-group">
                 <label for="gameName">游戏名称</label>
@@ -356,14 +326,12 @@
             gamesList: document.getElementById('gamesList'),
             addGameModal: document.getElementById('addGameModal'),
             closeAddGameModal: document.getElementById('closeAddGameModal'),
+            modalTitle: document.getElementById('modalTitle'),
             gameName: document.getElementById('gameName'),
             gameImage: document.getElementById('gameImage'),
             tagsInput: document.getElementById('tagsInput'),
             tagInput: document.getElementById('tagInput'),
-            saveGameBtn: document.getElementById('saveGameBtn'),
-            editGameModal: document.getElementById('editGameModal'),
-            closeEditGameModal: document.getElementById('closeEditGameModal'),
-            editGameTitle: document.getElementById('editGameTitle')
+            saveGameBtn: document.getElementById('saveGameBtn')
         };
 
         // 初始化应用
@@ -425,15 +393,35 @@
             }
 
             // 添加新游戏
-            if (elements.addNewGame) elements.addNewGame.addEventListener('click', showAddGameModal);
+            if (elements.addNewGame) elements.addNewGame.addEventListener('click', () => {
+                // 重置为添加模式
+                currentEditingGameId = null;
+                elements.modalTitle.textContent = '添加新游戏';
+                
+                // 清空表单
+                if (elements.gameName) elements.gameName.value = '';
+                if (elements.gameImage) elements.gameImage.value = '';
+                if (elements.tagInput) elements.tagInput.value = '';
+                
+                // 清空标签
+                const tagElements = elements.tagsInput.querySelectorAll('.tag');
+                tagElements.forEach(el => el.remove());
+                
+                elements.addGameModal.style.display = 'flex';
+                setTimeout(() => {
+                    if (elements.gameName) elements.gameName.focus();
+                }, 100);
+            });
 
-            // 添加新游戏模态框事件
+            // 关闭模态框
             if (elements.closeAddGameModal) elements.closeAddGameModal.addEventListener('click', () => {
                 elements.addGameModal.style.display = 'none';
             });
             
+            // 保存游戏
             if (elements.saveGameBtn) elements.saveGameBtn.addEventListener('click', saveGame);
             
+            // 添加标签
             if (elements.tagInput) {
                 elements.tagInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter' && this.value.trim() !== '') {
@@ -442,11 +430,6 @@
                     }
                 });
             }
-
-            // 编辑游戏模态框事件
-            if (elements.closeEditGameModal) elements.closeEditGameModal.addEventListener('click', () => {
-                elements.editGameModal.style.display = 'none';
-            });
         }
 
         // 渲染游戏列表
@@ -481,23 +464,6 @@
             });
         }
 
-        // 显示添加游戏模态框
-        function showAddGameModal() {
-            // 清空表单
-            if (elements.gameName) elements.gameName.value = '';
-            if (elements.gameImage) elements.gameImage.value = '';
-            if (elements.tagInput) elements.tagInput.value = '';
-            
-            // 清空标签
-            const tagElements = elements.tagsInput.querySelectorAll('.tag');
-            tagElements.forEach(el => el.remove());
-            
-            elements.addGameModal.style.display = 'flex';
-            setTimeout(() => {
-                if (elements.gameName) elements.gameName.focus();
-            }, 100);
-        }
-
         // 添加标签
         function addTag(tag) {
             if (!elements.tagsInput || !tag) return;
@@ -525,6 +491,33 @@
             return tags;
         }
 
+        // 编辑游戏
+        function editGame(gameId) {
+            const game = gameData.games.find(g => g.id === gameId);
+            if (!game) return;
+            
+            currentEditingGameId = gameId;
+            elements.modalTitle.textContent = `编辑 ${game.name}`;
+            
+            // 填充表单
+            if (elements.gameName) elements.gameName.value = game.name;
+            if (elements.gameImage) elements.gameImage.value = game.image;
+            
+            // 清空标签
+            const tagElements = elements.tagsInput.querySelectorAll('.tag');
+            tagElements.forEach(el => el.remove());
+            
+            // 添加现有标签
+            game.tags.forEach(tag => {
+                addTag(tag);
+            });
+            
+            elements.addGameModal.style.display = 'flex';
+            setTimeout(() => {
+                if (elements.gameName) elements.gameName.focus();
+            }, 100);
+        }
+
         // 保存游戏
         function saveGame() {
             if (!elements.gameName || !elements.gameImage) return;
@@ -534,12 +527,12 @@
             const tags = getTags();
             
             if (!name) {
-                showMessage('请输入游戏名称');
+                showMessage('游戏名称不能为空');
                 return;
             }
             
             if (!image) {
-                showMessage('请输入图片URL');
+                showMessage('图片URL不能为空');
                 return;
             }
             
@@ -569,40 +562,7 @@
             saveToLocalStorage();
             renderGamesList();
             elements.addGameModal.style.display = 'none';
-            elements.editGameModal.style.display = 'none';
             showMessage(currentEditingGameId ? '游戏信息已更新' : '新游戏已添加');
-            currentEditingGameId = null;
-        }
-
-        // 编辑游戏
-        function editGame(gameId) {
-            const game = gameData.games.find(g => g.id === gameId);
-            if (!game) return;
-            
-            currentEditingGameId = gameId;
-            
-            // 设置标题
-            if (elements.editGameTitle) {
-                elements.editGameTitle.textContent = `编辑 ${game.name}`;
-            }
-            
-            // 填充表单
-            if (elements.gameName) elements.gameName.value = game.name;
-            if (elements.gameImage) elements.gameImage.value = game.image;
-            
-            // 清空标签
-            const tagElements = elements.tagsInput.querySelectorAll('.tag');
-            tagElements.forEach(el => el.remove());
-            
-            // 添加现有标签
-            game.tags.forEach(tag => {
-                addTag(tag);
-            });
-            
-            elements.editGameModal.style.display = 'flex';
-            setTimeout(() => {
-                if (elements.gameName) elements.gameName.focus();
-            }, 100);
         }
 
         // 删除游戏
@@ -644,3 +604,4 @@
     </script>
 </body>
 </html>
+```
